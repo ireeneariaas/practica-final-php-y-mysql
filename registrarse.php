@@ -66,6 +66,10 @@
             padding: 8px;
             margin-bottom: 10px;}
 
+        #pass_repeat {width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;}
+
         button {
             background-color: black;
             color: white;
@@ -131,7 +135,10 @@
             <input type="number" step="0.01" id="saldo" name="saldo" required>
 
             <label for="pass">Contraseña</label>
-            <input type="password" id="pass" name="pass" required><br>
+            <input type="password" id="pass" name="pass" required>
+
+            <label for="pass_repeat">Repetir Contraseña</label>
+            <input type="password" id="pass_repeat" name="pass_repeat" required><br>
 
             <label for="tipo_cliente">Tipo de Cliente:</label><br>
             <input type="radio" id="vendedor" name="tipo" value="Vendedor">Vendedor<br>
@@ -158,12 +165,14 @@
                 die("Conexión fallida: " . mysqli_connect_error());
             }
 
+            // Recoger los datos del formulario
             $nombre_usuario = $_POST['nombre_usuario'];
             $nombre = $_POST['nombre'];
             $apellidos = $_POST['apellidos'];
             $dni = $_POST['dni'];
             $saldo = $_POST['saldo'];
-            $password = $_POST['password'];
+            $password = $_POST['pass'];
+            $password_repeat = $_POST['pass_repeat'];  // Contraseña repetida
             $tipo_cliente = $_POST['tipo'];
 
             // Verificar si el nombre de usuario ya existe
@@ -174,16 +183,25 @@
                 // Si el nombre de usuario ya existe, mostrar un mensaje de error
                 echo "<p class='error'>El nombre de usuario ya está registrado. Por favor, elige otro.</p>";
             } else {
-                // Si el nombre de usuario no existe, insertar el nuevo usuario
-                $sql = "INSERT INTO usuarios (nombre_usuario, nombre, apellidos, dni, saldo, password, tipo) 
-                        VALUES ('$nombre_usuario', '$nombre', '$apellidos', '$dni', $saldo, '$password', '$tipo_cliente')";
+                // Verificar si las contraseñas coinciden
+                if ($password === $password_repeat) {
+                    // Si las contraseñas coinciden, insertar el nuevo usuario
+                    // Encriptar la contraseña antes de almacenarla en la base de datos
+                    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-                if (mysqli_query($conn, $sql)) {
-                    // Si la inserción es exitosa, mostrar mensaje de éxito
-                    echo "<p class='success'>¡Usuario registrado correctamente!</p>";
+                    $sql = "INSERT INTO usuarios (nombre_usuario, nombre, apellidos, dni, saldo, password, tipo) 
+                            VALUES ('$nombre_usuario', '$nombre', '$apellidos', '$dni', $saldo, '$hashed_password', '$tipo_cliente')";
+
+                    if (mysqli_query($conn, $sql)) {
+                        // Si la inserción es exitosa, mostrar mensaje de éxito
+                        echo "<p class='success'>¡Usuario registrado correctamente!</p>";
+                    } else {
+                        // Si hay un error al insertar el usuario, mostrar el error de MySQL
+                        echo "<p class='error'>Hubo un error al registrar el usuario: " . mysqli_error($conn) . "</p>";
+                    }
                 } else {
-                    // Si hay un error al insertar el usuario, mostrar el error de MySQL
-                    echo "<p class='error'>Hubo un error al registrar el usuario: " . mysqli_error($conn) . "</p>";
+                    // Si las contraseñas no coinciden, mostrar un mensaje de error
+                    echo "<p class='error'>Las contraseñas no coinciden. Por favor, inténtalo de nuevo.</p>";
                 }
             }
 

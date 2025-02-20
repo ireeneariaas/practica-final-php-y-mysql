@@ -5,20 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
     <style>
-        body {
-            background-color: gray;
-            font-family: Arial, sans-serif;
-        }
-
         #div1 {
             background-color: white;
-            width: 300px;
-            padding: 20px;
-            padding-right: 40px;
+            width: 350px;
+            padding-left: 50px;
+            padding-right: 70px;
+            padding-top: 10px;
+            padding-bottom: 10px;
             margin: 50px auto;
             border-radius: 8px;
         }
-        
+
         label {
             display: block;
             margin: 10px 0 5px;
@@ -50,7 +47,7 @@
         body {
             margin: 0;
             font-family: Arial;
-            background-image: url("./img/concesionario.jpg");
+            background-image: url("./concesionario.jpg");
             background-size: cover;
             background-position: center;
             height: 800px;
@@ -68,6 +65,12 @@
             padding: 10px;
             text-align: center;
         }
+
+        #div2 {
+            text-align: center;
+        }
+
+        h2 {padding-bottom: 11px;}
     </style>
 </head>
 <body>
@@ -77,15 +80,16 @@
 
     <div id="div1">
         <h2>Iniciar Sesión</h2>
-        <form id="loginForm" action="login.php" method="post" onsubmit="return validateForm()">
+        <form id="loginForm" action="" method="post" onsubmit="return validateForm()">
             <label for="usuario">Usuario</label>
             <input type="text" id="usuario" name="usuario" required>
 
             <label for="contraseña">Contraseña</label>
-            <input type="password" id="contraseña" name="contraseña" required><br>
-
-            <button type="submit">Iniciar Sesión</button>
-            <p> Si aún <b>no estás registrado</b> en nuestro concesionario, <a href='./registrarse.php'>hazlo ahora</a></p>
+            <input type="password" id="contraseña" name="contraseña" required><br><br>
+            <div id="div2">
+                <button type="submit">Iniciar Sesión</button><br><br>
+                <p> Si aún <b>no estás registrado</b> en nuestro concesionario, <a href='./registrarse.php'>hazlo ahora</a></p>
+            </div>
         </form>
     </div>
 
@@ -96,12 +100,12 @@
         // Función para validar los campos del formulario
         function validateForm() {
             var usuario = document.getElementById('usuario').value;
-            var contraseña = document.getElementById('contraseña').value;
+            var contrasena = document.getElementById('contraseña').value; // Cambié aquí para que coincida con el nombre del campo
             var message = document.getElementById('message');
 
             // Verificar si los campos están vacíos
-            if (usuario.trim() === "" || contraseña.trim() === "") {
-                message.innerHTML = "<p style='color: white;'>Por favor, completa todos los campos.</p>";
+            if (usuario.trim() === "" || contrasena.trim() === "") {
+                message.innerHTML = "<p style='color: red;'>Por favor, completa ambos campos.</p>";
                 return false; // Impide que el formulario se envíe
             }
 
@@ -111,10 +115,9 @@
         }
     </script>
 
-    <div class="message">
     <?php
-    // Verificar si el formulario ha sido enviado
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        session_start(); // Iniciar la sesión al principio
+
         // Datos de conexión a la base de datos
         $servername = "localhost";
         $username = "root";
@@ -126,51 +129,66 @@
 
         // Verificar la conexión
         if (!$conn) {
-            die("Conexión fallida: " . mysqli_connect_error());
+            die("<p style='text-align: center; color: white;'>Conexión fallida: " . mysqli_connect_error() . "</p>");
         }
 
-        // Recibir los datos del formulario
-        $usuario = $_POST['usuario'];
-        $contraseña = $_POST['contraseña'];
+        // Verificar si el formulario fue enviado
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $usuario = $_POST['usuario'];  // Nombre de usuario del formulario
+            $contrasena = $_POST['contraseña'];  // Contraseña del formulario
 
-        // Consulta para verificar si el usuario existe
-        $sql = "SELECT * FROM usuarios WHERE nombre_usuario = '$usuario'";
-        $result = mysqli_query($conn, $sql);
+            // Consulta para verificar si el usuario existe en la base de datos
+            $sql = "SELECT * FROM usuarios WHERE nombre_usuario = '$usuario'"; 
+            $result = mysqli_query($conn, $sql);
 
-        // Verificar si el usuario existe
-        if (mysqli_num_rows($result) > 0) {
-            $row = mysqli_fetch_assoc($result);
+            // Verificar si el usuario existe
+            if (mysqli_num_rows($result) > 0) {
+                $row = mysqli_fetch_assoc($result);
 
-            // Verificar si la contraseña es correcta usando password_verify()
-            if (password_verify($contraseña, $row['contraseña'])) {
-                // Iniciar la sesión del usuario
-                session_start();
-                $_SESSION['usuario'] = $usuario;
+                // Si el tipo de usuario es "Administrador", verificamos la contraseña sin cifrar
+                if ($row['tipo'] == 'Administrador') {
+                    if ($contrasena == $row['password']) {
+                        // Iniciar sesión y guardar el tipo de usuario
+                        $_SESSION['usuario'] = $usuario;
+                        $_SESSION['tipo_usuario'] = $row['tipo'];  // Guardamos el tipo de usuario
 
-                // Obtener el tipo de usuario
-                $tipo_usuario = $row['tipo'];
-
-                // Redirigir dependiendo del tipo de usuario
-                if ($tipo_usuario == 'Comprador') {
-                    echo "<script>window.location.href = './comprador/comprador.php';</script>";
+                        // Redirigir al administrador
+                        header("Location: admin-inicio.php");
+                        exit();
+                    } else {
+                        echo "<p style='text-align: center; color: white;'>Contraseña incorrecta para Administrador.</p>";
+                    }
                 } else {
-                    echo "<script>window.location.href = 'panel_usuario.php';</script>";
-                }
+                    // Si no es administrador, verificamos la contraseña cifrada usando password_verify()
+                    if (password_verify($contrasena, $row['password'])) {
+                        // Iniciar sesión y guardar el tipo de usuario
+                        $_SESSION['usuario'] = $usuario;
+                        $_SESSION['tipo_usuario'] = $row['tipo'];  // Guardamos el tipo de usuario
 
+                        // Redirigir dependiendo del tipo de usuario
+                        switch ($row['tipo']) {
+                            case 'Vendedor':
+                                header("Location: vend-vendedor.php"); // Redirige a la página de vendedor
+                                exit();
+                            case 'Comprador':
+                                header("Location: comp-comprador.php"); // Redirige a la página de comprador
+                                exit();
+                            default:
+                                echo "<p style='text-align: center; color: white;'>Tipo de usuario desconocido.</p>";
+                                break;
+                        }
+                    } else {
+                        echo "<p style='text-align: center; color: white;'>Contraseña incorrecta.</p>";
+                    }
+                }
             } else {
-                echo "<p style='text-align: center; color: white;'>Contraseña incorrecta.</p>";
+                echo "<p style='text-align: center; color: white;'>Este usuario no está registrado en la base de datos del concesionario.</p>";
             }
-        } else {
-            // Si el usuario no es encontrado
-            echo "<p style='text-align: center; color: white;'>Este usuario no está registrado en la base de datos del concesionario.</p>";
         }
 
         // Cerrar la conexión
         mysqli_close($conn);
-    }
     ?>
-
-    </div>
 
 </body>
 </html>
