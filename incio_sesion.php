@@ -168,7 +168,7 @@
                         // Redirigir dependiendo del tipo de usuario
                         switch ($row['tipo']) {
                             case 'Vendedor':
-                                header("Location: vend-vendedor.php"); // Redirige a la página de vendedor
+                                header("Location: ven-vendedor.php"); // Redirige a la página de vendedor
                                 exit();
                             case 'Comprador':
                                 header("Location: comp-comprador.php"); // Redirige a la página de comprador

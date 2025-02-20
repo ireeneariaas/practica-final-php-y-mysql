@@ -97,16 +97,10 @@
     </div>
     <div>
         <ul class="menu">
-            <li><a href="">Coches</a>
-                <ul>
-                    <li><a href="comp-clistar.php">Listar</a></li>
-                    <li><a href="comp-cbuscar.php">Buscar</a></li>
-                </ul>
-            </li>
             <li><a href="">Alquileres</a>
                 <ul>
-                    <li><a href="comp-alistar.php">Listar</a></li>
-                    <li><a href="comp-aalquilar.php">Alquilar</a></li>
+                    <li><a href="ven-alistar.php">Listar</a></li>
+                    <li><a href="ven-aalquilar.php">Alquilar</a></li>
                 </ul>
             </li>
         </ul>

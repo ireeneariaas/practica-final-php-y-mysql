@@ -128,26 +128,14 @@
         <ul class="menu">
             <li><a href="">Coches</a>
                 <ul>
-                    <li><a href="admin-clistar.php">Listar</a></li>
-                    <li><a href="admin-canadir.php">Añadir</a></li>
-                    <li><a href="admin-cbuscar.php">Buscar</a></li>
-                    <li><a href="admin-cmodificar.php">Modificar</a></li>
-                    <li><a href="admin-cborrar.php">Borrar</a></li>
-                </ul>
-            </li>
-            <li><a href="">Usuarios</a>
-                <ul>
-                    <li><a href="admin-ulistar.php">Listar</a></li>
-                    <li><a href="admin-uanadir.php">Añadir</a></li>
-                    <li><a href="admin-ubuscar.php">Buscar</a></li>
-                    <li><a href="admin-umodificar.php">Modificar</a></li>
-                    <li><a href="admin-uborrar.php">Borrar</a></li>
+                    <li><a href="comp-clistar.php">Listar</a></li>
+                    <li><a href="comp-cbuscar.php">Buscar</a></li>
                 </ul>
             </li>
             <li><a href="">Alquileres</a>
                 <ul>
-                    <li><a href="admin-alistar.php">Listar</a></li>
-                    <li><a href="admin-aborrar.php">Borrar</a></li>
+                    <li><a href="comp-alistar.php">Listar</a></li>
+                    <li><a href="comp-aalquilar.php">Alquilar</a></li>
                 </ul>
             </li>
         </ul>
@@ -157,7 +145,7 @@
     <p color="black" align="justify">Se puede buscar por cualquier rasgo del coche, es decir, por su modelo, marca, color, precio o por si esta alquilado</p>
     <div class="search-box">
         <form action="" method="get">
-            <input type="text" name="buscar" placeholder="Buscar coche ..." required>
+            <input type="text" name="buscar" placeholder="Buscar coche por modelo, marca, color, precio o alquilado..." value="<?php echo isset($_GET['buscar']) ? $_GET['buscar'] : ''; ?>" required>
             <button type="submit">Buscar</button><br><br>
         </form>
     </div>
@@ -192,11 +180,12 @@
             if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
                 $buscar = mysqli_real_escape_string($conn, $_GET['buscar']);  // Escapar caracteres especiales
 
-                // Consulta para buscar coches por modelo, marca, color o precio
+                // Consulta para buscar coches por modelo, marca, color, precio o alquilado
                 $sql = "SELECT * FROM coches WHERE modelo LIKE '%$buscar%' 
                         OR marca LIKE '%$buscar%' 
                         OR color LIKE '%$buscar%' 
-                        OR precio LIKE '%$buscar%'";
+                        OR precio LIKE '%$buscar%' 
+                        OR alquilado LIKE '%$buscar%'";
             } else {
                 // Si no hay busqueda, mostrar todos los coches
                 $sql = "SELECT * FROM coches";
@@ -219,7 +208,7 @@
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='6'>No se encontraron coches con esa caracteristica.</td></tr>";
+                echo "<tr><td colspan='6'>No se encontraron coches con esa característica.</td></tr>";
             }
 
             // Cerrar la conexion

@@ -108,7 +108,7 @@
             <li><a href="">Alquileres</a>
                 <ul>
                     <li><a href="comp-alistar.php">Listar</a></li>
-                    <li><a href="comp-alquilar.php">Alquilar</a></li>
+                    <li><a href="comp-aalquilar.php">Alquilar</a></li>
                 </ul>
             </li>
         </ul>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comprador</title>
+    <title>VENDEDOR</title>
     <style>
         body {
             margin: 0; /* Elimina margen global del cuerpo */
@@ -80,20 +80,14 @@
 </head>
 <body>
     <div id="titulo">
-        <h1>COMPRADOR</h1>
+        <h1>VENDEDOR</h1>
     </div>
     <div>
         <ul class="menu">
-            <li><a href="">Coches</a>
-                <ul>
-                    <li><a href="comp-clistar.php">Listar</a></li>
-                    <li><a href="comp-cbuscar.php">Buscar</a></li>
-                </ul>
-            </li>
             <li><a href="">Alquileres</a>
                 <ul>
-                    <li><a href="comp-alistar.php">Listar</a></li>
-                    <li><a href="comp-aalquilar.php">Alquilar</a></li>
+                    <li><a href="ven-alistar.php">Listar</a></li>
+                    <li><a href="ven-aalquilar.php">Alquilar</a></li>
                 </ul>
             </li>
         </ul>
