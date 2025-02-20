@@ -17,8 +17,7 @@
             padding-right: 40px;
             margin: 50px auto;
             border-radius: 8px;
-        }
-
+        
         label {
             display: block;
             margin: 10px 0 5px;
