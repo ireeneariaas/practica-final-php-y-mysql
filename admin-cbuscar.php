@@ -99,24 +99,25 @@
             flex: none;
         }
         #div3 {
-    background-color: white;
-    padding: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top:20px;
-    width: 400px;
-    border-radius: 8px;
-}
+            background-color: white;
+            padding: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top:20px;
+            width: 470px;
+            border-radius: 8px;
+        }
 
-form {
-    margin: 0;
-    padding: 0;
-}
+        form {
+            margin: 0;
+            padding: 0;
+        }
 
-form input {
-    margin: 2px 0; 
-    padding: 5px;
-    width:380px; }
+        form input {
+            margin: 2px 0; 
+            padding: 5px;
+            width:380px; 
+        }
     </style>
 </head>
 <body>
@@ -153,7 +154,7 @@ form input {
     </div>
     <h1>Buscar Coches</h1>
     <div id="div3">
-    <p color="black">Se puede buscar por cualquier rasgo del coche, es decir, por su modelo, marca, color, precio o por si esta alquilado</p>
+    <p color="black" align="justify">Se puede buscar por cualquier rasgo del coche, es decir, por su modelo, marca, color, precio o por si esta alquilado</p>
     <div class="search-box">
         <form action="" method="get">
             <input type="text" name="buscar" placeholder="Buscar coche ..." required>

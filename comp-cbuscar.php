@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar Coches</title>
     <style>
-         body{align: center;
+         body{background-color:gray;
+            align: center;
             background-image: url("./concesionario.jpg");
             background-size: cover; 
             background-position: center; 
@@ -21,6 +22,13 @@
         table{background-color:white;
             width: 60%;
             text-align: center}
+      
+        
+        body{background-color:gray;
+            align: center;
+            background-image: url("./concesionario.jpg");
+            margin: 0;
+            font-family: Arial;}
 
         table{background-color:white;
             width: 60%;
@@ -91,24 +99,25 @@
             flex: none;
         }
         #div3 {
-    background-color: white;
-    padding: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top:20px;
-    width: 400px;
-    border-radius: 8px;
-}
+            background-color: white;
+            padding: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top:20px;
+            width: 470px;
+            border-radius: 8px;
+        }
 
-form {
-    margin: 0;
-    padding: 0;
-}
+        form {
+            margin: 0;
+            padding: 0;
+        }
 
-form input {
-    margin: 2px 0; 
-    padding: 5px;
-    width:380px; }
+        form input {
+            margin: 2px 0; 
+            padding: 5px;
+            width:380px; 
+        }
     </style>
 </head>
 <body>
@@ -119,21 +128,33 @@ form input {
         <ul class="menu">
             <li><a href="">Coches</a>
                 <ul>
-                    <li><a href="comp-clistar.php">Listar</a></li>
-                    <li><a href="comp-cbuscar.php">Buscar</a></li>
+                    <li><a href="admin-clistar.php">Listar</a></li>
+                    <li><a href="admin-canadir.php">Añadir</a></li>
+                    <li><a href="admin-cbuscar.php">Buscar</a></li>
+                    <li><a href="admin-cmodificar.php">Modificar</a></li>
+                    <li><a href="admin-cborrar.php">Borrar</a></li>
+                </ul>
+            </li>
+            <li><a href="">Usuarios</a>
+                <ul>
+                    <li><a href="admin-ulistar.php">Listar</a></li>
+                    <li><a href="admin-uanadir.php">Añadir</a></li>
+                    <li><a href="admin-ubuscar.php">Buscar</a></li>
+                    <li><a href="admin-umodificar.php">Modificar</a></li>
+                    <li><a href="admin-uborrar.php">Borrar</a></li>
                 </ul>
             </li>
             <li><a href="">Alquileres</a>
                 <ul>
-                    <li><a href="comp-alistar.php">Listar</a></li>
-                    <li><a href="comp-alquilar.php">Alquilar</a></li>
+                    <li><a href="admin-alistar.php">Listar</a></li>
+                    <li><a href="admin-aborrar.php">Borrar</a></li>
                 </ul>
             </li>
         </ul>
     </div>
     <h1>Buscar Coches</h1>
     <div id="div3">
-    <p color="black">Se puede buscar por cualquier rasgo del coche, es decir, por su modelo, marca, color, precio o por si esta alquilado</p>
+    <p color="black" align="justify">Se puede buscar por cualquier rasgo del coche, es decir, por su modelo, marca, color, precio o por si esta alquilado</p>
     <div class="search-box">
         <form action="" method="get">
             <input type="text" name="buscar" placeholder="Buscar coche ..." required>
@@ -194,13 +215,12 @@ form input {
                     echo "<td>" . $row["marca"] . "</td>";
                     echo "<td>" . $row["color"] . "</td>";
                     echo "<td>" . $row["precio"] . "</td>";
-                    echo "<td>" . ($row["alquilado"] ? "Alquilado" : "No alquilado") . "</td>";
+                    echo "<td>" . ($row["alquilado"] ? "Si" : "No") . "</td>";
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='6'>No se encontraron coches con esa característica.</td></tr>";
+                echo "<tr><td colspan='6'>No se encontraron coches con esa caracteristica.</td></tr>";
             }
-
 
             // Cerrar la conexion
             mysqli_close($conn);
