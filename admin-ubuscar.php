@@ -1,18 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-<style>
+    <title>Buscar Usuarios</title>
+    <style>
+         body{background-color:gray;
+            align: center;
+            background-image: url("./concesionario.jpg");
+            background-size: cover; 
+            background-position: center; 
+            height: 800px;
+            margin: 0;
+            font-family: Arial;}
+        #centrar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;}
+        
+        table{background-color:white;
+            width: 60%;
+            text-align: center}
+      
+        
         body{background-color:gray;
             align: center;
             background-image: url("./concesionario.jpg");
-            background-size: cover; /* La imagen cubre toda la pantalla */
-            background-position: center; /* Centra la imagen de fondo */
-            height: 800px;
             margin: 0;
             font-family: Arial;}
 
@@ -36,7 +50,6 @@
             text-align: center;
         }
 
-        /* Estilos generales para el menú */
         ul {
             list-style: none;
             padding: 0;
@@ -72,7 +85,7 @@
             background: #ddd;
         }
 
-        /* Menú principal en horizontal */
+
         .menu {
             display: flex;
             justify-content: center; /* Centra el menú horizontalmente */
@@ -86,24 +99,25 @@
             flex: none;
         }
         #div3 {
-    background-color: white;
-    padding: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 400px;
-    border-radius: 8px;
-}
+            background-color: white;
+            padding: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top:20px;
+            width: 470px;
+            border-radius: 8px;
+        }
 
-form {
-    margin: 0;
-    padding: 0;
-}
+        form {
+            margin: 0;
+            padding: 0;
+        }
 
-form input {
-    margin: 2px 0; 
-    padding: 5px;
-    width:380px; 
-}
+        form input {
+            margin: 2px 0; 
+            padding: 5px;
+            width:380px; 
+        }
     </style>
 </head>
 <body>
@@ -138,76 +152,85 @@ form input {
             </li>
         </ul>
     </div>
-    <h1>Buscar usuario</h1>
+    <h1>Buscar Usuarios</h1>
     <div id="div3">
-    <form action="" method="POST">
-        Contraseña:<br>
-        <input type="password" name="password" required><br><br>
-        Nombre:<br>
-        <input type="text" name="nombre" required><br><br>
-        Apellidos:<br>
-        <input type="text" name="apellidos" required><br><br>
-        DNI:<br>
-        <input type="text" name="dni" required><br><br>
-        Saldo:<br>
-        <input type="text" name="saldo" required><br><br>
-        <input type="submit" value="Buscar usuario">
-    </form>
-</div><br><br>
-    <?php
-    
-       // Conectar con el servidor de base de datos
-        $conexion = mysqli_connect ("localhost", "root", "rootroot","concesionario")
-             or die ("No se puede conectar con el servidor");
-            
-       $password = $_REQUEST['password'];
-       $nombre = $_REQUEST['nombre'];
-       $apellidos = $_REQUEST['apellidos'];
-       $dni = $_REQUEST['dni'];
-       $saldo = $_REQUEST['saldo'];
-    
-       // Enviar consulta
-          $instruccion = "select * from Usuarios where password='$password' or nombre='$nombre' or apellidos='$apellidos' or dni='$dni' or saldo='$saldo'";
-          $consulta = mysqli_query ($conexion,$instruccion)
-             or die ("Fallo en la consulta");
-          
-          $nfilas = mysqli_num_rows ($consulta);
-          if ($nfilas > 0)
-          {
-             print ("<TABLE border=1>\n");
-             print ("<TR>\n");
-             print ("<TH>password</TH>\n");
-             print ("<TH>nombre</TH>\n");
-             print ("<TH>apellidos</TH>\n");
-             print ("<TH>dni</TH>\n");
-             print ("<TH>saldo</TH>\n");
-             print ("</TR>\n");
-    
-             for ($i=0; $i<$nfilas; $i++)
-             {
-                $resultado = mysqli_fetch_array ($consulta);
-                print ("<TR>\n");
-                print ("<TD>" . $resultado['password'] . "</TD>\n");
-                print ("<TD>" . $resultado['nombre'] . "</TD>\n");
-                print ("<TD>" . $resultado['apellidos'] . "</TD>\n");
-                print ("<TD>" . $resultado['dni'] . "</TD>\n");
-                print ("<TD>" . $resultado['saldo'] . "</TD>\n");
-    
-                
-                print ("</TR>\n");
-             }
-    
-             print ("</TABLE>\n");
-          }
-          else {
-             print ("No hay noticias que coincidan");
-          }
-          
-    
-    // Cerrar 
-    mysqli_close ($conexion);
-    
-    ?>
-</div>
+    <p color="black" align="justify">Se puede buscar por cualquier rasgo del usuario, como su nombre, apellidos, DNI, saldo, tipo de usuario o nombre de usuario</p>
+    <div class="search-box">
+        <form action="" method="get">
+            <input type="text" name="buscar" placeholder="Buscar usuario ..." required>
+            <button type="submit">Buscar</button><br><br>
+        </form>
+    </div>
+    </div>
+    <div id="centrar">
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>DNI</th>
+            <th>Saldo</th>
+            <th>Tipo</th>
+            <th>Nombre de Usuario</th>
+        </tr>
+        
+        <?php
+            // Conexion a la base de datos
+            $servername = "localhost";  
+            $username = "root";         
+            $password = "rootroot";        
+            $dbname = "concesionario";  
+
+            // Crear la conexion
+            $conn = mysqli_connect($servername, $username, $password, $dbname);
+
+            // Verificar la conexion
+            if (!$conn) {
+                die("Conexion fallida: " . mysqli_connect_error());
+            }
+
+            // Verificar si se ha enviado el formulario de busqueda
+            if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
+                $buscar = mysqli_real_escape_string($conn, $_GET['buscar']);  // Escapar caracteres especiales
+
+                // Consulta para buscar usuarios por nombre, apellidos, dni, saldo, tipo o nombre_usuario
+                $sql = "SELECT * FROM usuarios WHERE nombre LIKE '%$buscar%' 
+                        OR apellidos LIKE '%$buscar%' 
+                        OR dni LIKE '%$buscar%' 
+                        OR saldo LIKE '%$buscar%' 
+                        OR tipo LIKE '%$buscar%' 
+                        OR nombre_usuario LIKE '%$buscar%'";
+            } else {
+                // Si no hay busqueda, mostrar todos los usuarios
+                $sql = "SELECT * FROM usuarios";
+            }
+
+            // Ejecutar la consulta
+            $result = mysqli_query($conn, $sql);
+
+            // Verificar si hay resultados
+            if (mysqli_num_rows($result) > 0) {
+                // Mostrar cada fila de datos en la tabla
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<tr>";
+                    echo "<td>" . $row["id_usuario"] . "</td>";
+                    echo "<td>" . $row["nombre"] . "</td>";
+                    echo "<td>" . $row["apellidos"] . "</td>";
+                    echo "<td>" . $row["dni"] . "</td>";
+                    echo "<td>" . $row["saldo"] . "</td>";
+                    echo "<td>" . $row["tipo"] . "</td>";
+                    echo "<td>" . $row["nombre_usuario"] . "</td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='7'>No se encontraron usuarios con esa característica.</td></tr>";
+            }
+
+            // Cerrar la conexion
+            mysqli_close($conn);
+        ?>
+    </table>
+    </div>
+
 </body>
 </html>

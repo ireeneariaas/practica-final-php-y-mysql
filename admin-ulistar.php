@@ -6,23 +6,30 @@
     <title>Document</title>
 </head>
 <body>
-<style>
-        body{background-color:gray;
+    <style>
+        body {
+            background-color: gray;
             align: center;
             background-image: url("./concesionario.jpg");
             background-size: cover; /* La imagen cubre toda la pantalla */
             background-position: center; /* Centra la imagen de fondo */
             height: 800px;
             margin: 0;
-            font-family: Arial;}
+            font-family: Arial;
+        }
 
-        table{background-color:white;
+        table {
+            background-color: white;
             width: 60%;
             text-align: center;
-            align-items: center;}
-            
-        h1{color:white;}
-       
+            align-items: center;
+            margin: 0 auto; /* Centra la tabla */
+        }
+        
+        h1 {
+            color: white;
+        }
+
         #titulo {
             background-color: gray;
             color: white;
@@ -86,9 +93,11 @@
             flex: none;
         }
     </style>
-<div id="titulo">
+
+    <div id="titulo">
         <h1>USUARIOS</h1>
     </div>
+
     <div>
         <ul class="menu">
             <li><a href="">Coches</a>
@@ -117,8 +126,9 @@
             </li>
         </ul>
     </div>
+
     <h1>Listar usuarios</h1>
-    
+
     <?php
        // Conectar con el servidor de base de datos
           $conexion = mysqli_connect ("localhost", "root", "rootroot")
@@ -143,7 +153,6 @@
              print ("<TH>dni</TH>\n");
              print ("<TH>saldo</TH>\n");
              
-            
              print ("</TR>\n");
     
              for ($i=0; $i<$nfilas; $i++)
@@ -155,8 +164,6 @@
                 print ("<TD>" . $resultado['apellidos'] . "</TD>\n");
                 print ("<TD>" . $resultado['dni'] . "</TD>\n");
                 print ("<TD>" . $resultado['saldo'] . "</TD>\n");
-                
-    
                 
                 print ("</TR>\n");
              }

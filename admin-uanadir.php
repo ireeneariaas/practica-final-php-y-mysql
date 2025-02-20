@@ -32,8 +32,8 @@
     #titulo {
         background-color: gray;
         color: white;
-        margin: 0;
-        padding: 0;
+        margin: 0; /* Elimina el margen superior */
+        padding: 0; /* Elimina el padding */
     }
 
     h1 {
@@ -93,72 +93,100 @@
     }
 
     #div3 {
-    background-color: white;
-    padding: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 400px;
-    border-radius: 8px;
-}
+        background-color: white;
+        padding: 25px;
+        padding-left: 40px;
+        padding-right: 40px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 400px;
+        border-radius: 8px;
+    }
 
-form {
-    margin: 0;
-    padding: 0;
-}
+    form {
+        margin: 0;
+        padding: 0;
+    }
 
-form input {
-    margin: 2px 0; 
-    padding: 5px;
-    width:380px; 
-}
+    .ns {
+        margin: 2px 0; 
+        padding: 5px;
+        width: 380px; 
+    }
 
+    /* Estilo para el botón */
+    input[type="submit"] {
+        background-color: black; /* Fondo negro */
+        color: white; /* Texto blanco */
+        border: none; /* Sin borde */
+        padding: 10px 20px; /* Ajusta el tamaño al texto */
+        cursor: pointer; /* Cambia el cursor a pointer */
+        font-size: 16px; /* Asegura que el texto sea legible */
+        border-radius: 5px; /* Bordes redondeados */
+    }
+
+    input[type="submit"]:hover {
+        background-color: #333; /* Fondo gris oscuro al pasar el mouse */
+    }
+
+    #boton {text-align: center;}
+
+    .error {
+        color: white;
+        text-align: center;
+    }
 </style>
 <div id="titulo">
     <h1>USUARIOS</h1>
 </div>
-<<div>
-        <ul class="menu">
-            <li><a href="">Coches</a>
-                <ul>
-                    <li><a href="admin-clistar.php">Listar</a></li>
-                    <li><a href="admin-canadir.php">Añadir</a></li>
-                    <li><a href="admin-cbuscar.php">Buscar</a></li>
-                    <li><a href="admin-cmodificar.php">Modificar</a></li>
-                    <li><a href="admin-cborrar.php">Borrar</a></li>
-                </ul>
-            </li>
-            <li><a href="">Usuarios</a>
-                <ul>
-                    <li><a href="admin-ulistar.php">Listar</a></li>
-                    <li><a href="admin-uanadir.php">Añadir</a></li>
-                    <li><a href="admin-ubuscar.php">Buscar</a></li>
-                    <li><a href="admin-umodificar.php">Modificar</a></li>
-                    <li><a href="admin-uborrar.php">Borrar</a></li>
-                </ul>
-            </li>
-            <li><a href="">Alquileres</a>
-                <ul>
-                    <li><a href="admin-alistar.php">Listar</a></li>
-                    <li><a href="admin-aborrar.php">Borrar</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
 
-<h1>Listar usuarios</h1>
+<div>
+    <ul class="menu">
+        <li><a href="">Coches</a>
+            <ul>
+                <li><a href="admin-clistar.php">Listar</a></li>
+                <li><a href="admin-canadir.php">Añadir</a></li>
+                <li><a href="admin-cbuscar.php">Buscar</a></li>
+                <li><a href="admin-cmodificar.php">Modificar</a></li>
+                <li><a href="admin-cborrar.php">Borrar</a></li>
+            </ul>
+        </li>
+        <li><a href="">Usuarios</a>
+            <ul>
+                <li><a href="admin-ulistar.php">Listar</a></li>
+                <li><a href="admin-uanadir.php">Añadir</a></li>
+                <li><a href="admin-ubuscar.php">Buscar</a></li>
+                <li><a href="admin-umodificar.php">Modificar</a></li>
+                <li><a href="admin-uborrar.php">Borrar</a></li>
+            </ul>
+        </li>
+        <li><a href="">Alquileres</a>
+            <ul>
+                <li><a href="admin-alistar.php">Listar</a></li>
+                <li><a href="admin-aborrar.php">Borrar</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<h1>Añadir usuarios</h1>
 <div id="div3">
     <form action="" method="POST">
-        Contraseña:<br>
-        <input type="password" name="password" required><br><br>
         Nombre:<br>
-        <input type="text" name="nombre" required><br><br>
+        <input type="text" name="nombre" class="ns"  required><br><br>
         Apellidos:<br>
-        <input type="text" name="apellidos" required><br><br>
+        <input type="text" name="apellidos" class="ns"  required><br><br>
         DNI:<br>
-        <input type="text" name="dni" required><br><br>
+        <input type="text" name="dni" class="ns" required><br><br>
         Saldo:<br>
-        <input type="text" name="saldo" required><br><br>
-        <input type="submit" value="Añadir usuario">
+        <input type="text" name="saldo" class="ns"  required><br><br>
+        Contraseña:<br>
+        <input type="password" name="password" class="ns" required><br><br>
+        Repetir contraseña:<br>
+        <input type="password" name="password_repeat" class="ns" required><br><br>
+        <div id="boton">
+            <input type="submit" value="Añadir">
+        </div>
     </form>
 </div>
 
@@ -170,22 +198,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Recopilación de datos
     $password = $_POST['password'];
+    $password_repeat = $_POST['password_repeat']; // Cambiado para tomar la repetición de la contraseña
     $nombre = $_POST['nombre'];
     $apellidos = $_POST['apellidos'];
     $dni = $_POST['dni'];
     $saldo = $_POST['saldo'];
 
-    // Consulta preparada para evitar inyección SQL
-    $stmt = $conexion->prepare("INSERT INTO usuarios (password, nombre, apellidos, dni, saldo) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssd", $password, $nombre, $apellidos, $dni, $saldo);
+    // Verificar si las contraseñas coinciden
+    if ($password !== $password_repeat) {
+        echo "<p class='error'>Las contraseñas no coinciden. Intenta de nuevo.</p>";
+    } else {
+        // Consulta preparada para evitar inyección SQL
+        $stmt = $conexion->prepare("INSERT INTO usuarios (password, nombre, apellidos, dni, saldo) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssd", $password, $nombre, $apellidos, $dni, $saldo);
 
-    if ($stmt->execute()) {
-        echo "<p style='text-align: center; color: white;'>Usuario añadido correctamente.</p>";
+        if ($stmt->execute()) {
+            echo "<p style='text-align: center; color: white;'>Usuario añadido correctamente.</p>";
+        }
+
+        // Cerrar la sentencia y conexión
+        $stmt->close();
+        mysqli_close($conexion);
     }
-
-    // Cerrar la sentencia y conexión
-    $stmt->close();
-    mysqli_close($conexion);
 }
 ?>
 </body>
