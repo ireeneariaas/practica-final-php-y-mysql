@@ -1,27 +1,25 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Concesionario de Autos</title>
 </head>
-<style>
-        body{background-color:gray;
+<body>
+    <style>
+        body {
+            background-color: gray;
             align: center;
             background-image: url("./concesionario.jpg");
             background-size: cover; /* La imagen cubre toda la pantalla */
             background-position: center; /* Centra la imagen de fondo */
-            height: 100%;
+            height: 800px;
             margin: 0;
-            font-family: Arial;}
+            font-family: Arial;
+        }
 
-        table{background-color:white;
-            width: 60%;
+        h1 {
+            color: white;
             text-align: center;
-            align-items: center;}
-            
-        h1{color:white;}
-       
+        }
+
         #titulo {
             background-color: gray;
             color: white;
@@ -84,10 +82,52 @@
         .menu > li {
             flex: none;
         }
+
+        /* Estilo para centrar los elementos */
+        .center {
+            text-align: center;
+            margin-top: 20px;
+            color: white;
+        }
+
+        /* Estilos de la tabla */
+        table {
+            margin: 0 auto;
+            background-color: white;
+            width: 95%;
+        }
+
+        table th, table td {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        button {
+            background-color: black;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #b0b0b0; /* Gris un poco más oscuro al pasar el mouse */
+        }
+
+        #div1 {
+            background-color: white;
+            width: 800px;
+            padding: 20px;
+            margin: 0px auto;
+            border-radius: 8px;
+        }
+
     </style>
+
     <div id="titulo">
         <h1>ALQUILERES</h1>
     </div>
+
     <div>
         <ul class="menu">
             <li><a href="">Coches</a>
@@ -116,43 +156,77 @@
             </li>
         </ul>
     </div>
+
+    <h1>Borrar alquileres</h1>
+    
     <?php
-        $conn = mysqli_connect("localhost", "root", "rootroot", "concesionario");
+        // Datos de conexión a la base de datos
+        $servername = "localhost";  // Cambia esto si el servidor es diferente
+        $username = "root";         // Usuario de MySQL
+        $password = "rootroot";     // Contraseña de MySQL
+        $dbname = "concesionario";  // Nombre de la base de datos existente
+
+        $conn = mysqli_connect($servername, $username, $password, $dbname);
+        
         if (!$conn) {
             die("Connection failed: " . mysqli_connect_error());
         }
-        $sql = "SELECT id_alquiler, id_usuario, id_coche, prestado, devuelto FROM Alquileres";
+
+        $sql = "SELECT id_alquiler, id_usuario, id_coche, prestado, devuelto FROM alquileres";
         $result = mysqli_query($conn, $sql);
+
+        $delete_success = false; // Variable para verificar si la eliminación fue exitosa
+
+        if (isset($_POST['delete_ids'])) {
+            $delete_ids = $_POST['delete_ids'];
+            foreach ($delete_ids as $id_alquiler) {
+                $delete_sql = "DELETE FROM alquileres WHERE id_alquiler = $id_alquiler";
+                if (mysqli_query($conn, $delete_sql)) {
+                    $delete_success = true; // Marca como exitoso si la eliminación se realiza
+                } else {
+                    echo "Error al eliminar el alquiler con ID $id_alquiler: " . mysqli_error($conn);
+                }
+            }
+        }
+
+        echo "<div id='div1'>";
         if (mysqli_num_rows($result) > 0) {
-            echo "<form action='aborrar2.php' method='post'>";
-            echo "<table border='1'>";
-            echo "<tr><th>Seleccionar</th><th>id_alquiler</th><th>id_usuario</th><th>id_coche</th><th>Dni</th><th>Saldo</th></tr>";
-            // Mostrar cada piso con su checkbox
+            echo "<form action='' method='post'>";
+            echo "<table border=1>";
+            echo "<tr>
+                    <th>Seleccionar</th>
+                    <th>ID Usuario</th>
+                    <th>ID Coche</th>
+                    <th>Fecha de Prestado</th>
+                    <th>Fecha de Devuelto</th>
+                </tr>";
+
+            // Mostrar cada alquiler con su checkbox
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>";
-                echo "<td><input type='checkbox' name='delete_ids[]' value='" . $row['id_usuario'] . "'></td>";
-                echo "<td>" . htmlspecialchars($row['password']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['nombre']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['apellidos']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['dni']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['saldo']) . "</td>";
+                echo "<td><input type='checkbox' name='delete_ids[]' value='" . $row['id_alquiler'] . "'></td>";
+                echo "<td>" . htmlspecialchars($row['id_usuario']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['id_coche']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['prestado']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['devuelto']) . "</td>";
                 echo "</tr>";
             }
             echo "</table>";
-            echo "<br>";
-            echo "<button type='submit'>Eliminar seleccionados</button>";
-            echo "</form>";
+        echo "<div class='center'><button type='submit'>Borrar</button></div>";
+        echo "</form>";
+        echo "</div>";
         } else {
-            echo "<h1>No hay alquileres disponibles</h1>";
+            echo "<div class='center'><h2>No hay alquileres disponibles</h2></div>";
         }
 
         // Cerrar conexión
         mysqli_close($conn);
+
+        // Mostrar mensaje de éxito después de la operación de eliminación
+        if ($delete_success) {
+            echo "<div class='center' style='color: white; padding: 10px; margin-top: 20px;'>El alquiler se borró correctamente</div>";
+        }
     ?>
 
-  
-
 </body>
-
-
 </html>
