@@ -31,13 +31,11 @@
         table {
             background-color: white;
             margin: 20px auto;
-            border-collapse: collapse;
             width: 80%;
         }
 
         th, td {
             border: 1px solid black;
-            padding: 10px;
             text-align: center;
         }
 
@@ -203,7 +201,7 @@ if (mysqli_num_rows($result) > 0) {
     echo "</table>";
 
     // Botón para actualizar todos los coches
-    echo "<div style='text-align: center;'><button type='submit'>Actualizar y Guardar</button></div>";
+    echo "<div style='text-align: center;'><button type='submit'>Modificar y Guardar</button></div>";
 } else {
     echo "<p class='message'>No hay coches disponibles.</p>";
 }
