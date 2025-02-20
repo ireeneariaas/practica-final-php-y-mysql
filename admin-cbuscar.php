@@ -7,7 +7,7 @@
     <style>
          body{background-color:gray;
             align: center;
-            background-image: url("../concesionario.jpg");
+            background-image: url("./concesionario.jpg");
             background-size: cover; 
             background-position: center; 
             height: 800px;
@@ -26,7 +26,7 @@
         
         body{background-color:gray;
             align: center;
-            background-image: url("./img/concesionario.jpg");
+            background-image: url("./concesionario.jpg");
             margin: 0;
             font-family: Arial;}
 
@@ -125,29 +125,28 @@ form input {
     </div>
     <div>
         <ul class="menu">
-        <li><a href="inicio.html">Inicio</a></li>
             <li><a href="">Coches</a>
                 <ul>
-                    <li><a href="clistar.php">Listar</a></li>
-                    <li><a href="canadir.php">Añadir</a></li>
-                    <li><a href="cbuscar.php">Buscar</a></li>
-                    <li><a href="cmodificar.php">Modificar</a></li>
-                    <li><a href="cborrar.php">Borrar</a></li>
+                    <li><a href="admin-clistar.php">Listar</a></li>
+                    <li><a href="admin-canadir.php">Añadir</a></li>
+                    <li><a href="admin-cbuscar.php">Buscar</a></li>
+                    <li><a href="admin-cmodificar.php">Modificar</a></li>
+                    <li><a href="admin-cborrar.php">Borrar</a></li>
                 </ul>
             </li>
             <li><a href="">Usuarios</a>
                 <ul>
-                    <li><a href="ulistar.php">Listar</a></li>
-                    <li><a href="uanadir.php">Añadir</a></li>
-                    <li><a href="ubuscar.php">Buscar</a></li>
-                    <li><a href="umodificar.php">Modificar</a></li>
-                    <li><a href="uborrar.php">Borrar</a></li>
+                    <li><a href="admin-ulistar.php">Listar</a></li>
+                    <li><a href="admin-uanadir.php">Añadir</a></li>
+                    <li><a href="admin-ubuscar.php">Buscar</a></li>
+                    <li><a href="admin-umodificar.php">Modificar</a></li>
+                    <li><a href="admin-uborrar.php">Borrar</a></li>
                 </ul>
             </li>
             <li><a href="">Alquileres</a>
                 <ul>
-                    <li><a href="alistar.php">Listar</a></li>
-                    <li><a href="aborrar.php">Borrar</a></li>
+                    <li><a href="admin-alistar.php">Listar</a></li>
+                    <li><a href="admin-aborrar.php">Borrar</a></li>
                 </ul>
             </li>
         </ul>
@@ -215,13 +214,12 @@ form input {
                     echo "<td>" . $row["marca"] . "</td>";
                     echo "<td>" . $row["color"] . "</td>";
                     echo "<td>" . $row["precio"] . "</td>";
-                    echo "<td>" . ($row["alquilado"] ? "Alquilado" : "No alquilado") . "</td>";
+                    echo "<td>" . ($row["alquilado"] ? "Si" : "No") . "</td>";
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='6'>No se encontraron coches con esa característica.</td></tr>";
+                echo "<tr><td colspan='6'>No se encontraron coches con esa caracteristica.</td></tr>";
             }
-
 
             // Cerrar la conexion
             mysqli_close($conn);

@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comprador</title>
+    <title>Menú Horizontal</title>
     <style>
         body {
             margin: 0; /* Elimina margen global del cuerpo */
             font-family: Arial;
-            background-image: url("../concesionario.jpg");
+            background-image: url("./concesionario.jpg");
             background-size: cover; /* La imagen cubre toda la pantalla */
             background-position: center; /* Centra la imagen de fondo */
             height: 800px;
@@ -80,20 +80,32 @@
 </head>
 <body>
     <div id="titulo">
-        <h1>COMPRADOR</h1>
+        <h1>CONCESIONARIO</h1>
     </div>
     <div>
         <ul class="menu">
             <li><a href="">Coches</a>
                 <ul>
-                    <li><a href="clistar.php">Listar</a></li>
-                    <li><a href="cbuscar.php">Buscar</a></li>
+                    <li><a href="admin-clistar.php">Listar</a></li>
+                    <li><a href="admin-canadir.php">Añadir</a></li>
+                    <li><a href="admin-cbuscar.php">Buscar</a></li>
+                    <li><a href="admin-cmodificar.php">Modificar</a></li>
+                    <li><a href="admin-cborrar.php">Borrar</a></li>
+                </ul>
+            </li>
+            <li><a href="">Usuarios</a>
+                <ul>
+                    <li><a href="admin-ulistar.php">Listar</a></li>
+                    <li><a href="admin-uanadir.php">Añadir</a></li>
+                    <li><a href="admin-ubuscar.php">Buscar</a></li>
+                    <li><a href="admin-umodificar.php">Modificar</a></li>
+                    <li><a href="admin-uborrar.php">Borrar</a></li>
                 </ul>
             </li>
             <li><a href="">Alquileres</a>
                 <ul>
-                    <li><a href="alistar.php">Listar</a></li>
-                    <li><a href="aalquilar.php">Alquilar</a></li>
+                    <li><a href="admin-alistar.php">Listar</a></li>
+                    <li><a href="admin-aborrar.php">Borrar</a></li>
                 </ul>
             </li>
         </ul>

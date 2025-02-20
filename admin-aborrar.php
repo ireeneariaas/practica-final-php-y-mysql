@@ -8,10 +8,10 @@
 <style>
         body{background-color:gray;
             align: center;
-            background-image: url("../concesionario.jpg");
+            background-image: url("./concesionario.jpg");
             background-size: cover; /* La imagen cubre toda la pantalla */
             background-position: center; /* Centra la imagen de fondo */
-            height: 800px;
+            height: 100%;
             margin: 0;
             font-family: Arial;}
 
@@ -86,33 +86,32 @@
         }
     </style>
     <div id="titulo">
-        <h1>COCHES</h1>
+        <h1>ALQUILERES</h1>
     </div>
     <div>
         <ul class="menu">
-        <li><a href="inicio.html">Inicio</a></li>
             <li><a href="">Coches</a>
                 <ul>
-                    <li><a href="clistar.php">Listar</a></li>
-                    <li><a href="canadir.php">Añadir</a></li>
-                    <li><a href="cbuscar.php">Buscar</a></li>
-                    <li><a href="cmodificar.php">Modificar</a></li>
-                    <li><a href="cborrar.php">Borrar</a></li>
+                    <li><a href="admin-clistar.php">Listar</a></li>
+                    <li><a href="admin-canadir.php">Añadir</a></li>
+                    <li><a href="admin-cbuscar.php">Buscar</a></li>
+                    <li><a href="admin-cmodificar.php">Modificar</a></li>
+                    <li><a href="admin-cborrar.php">Borrar</a></li>
                 </ul>
             </li>
             <li><a href="">Usuarios</a>
                 <ul>
-                    <li><a href="ulistar.php">Listar</a></li>
-                    <li><a href="uanadir.php">Añadir</a></li>
-                    <li><a href="ubuscar.php">Buscar</a></li>
-                    <li><a href="umodificar.php">Modificar</a></li>
-                    <li><a href="uborrar.php">Borrar</a></li>
+                    <li><a href="admin-ulistar.php">Listar</a></li>
+                    <li><a href="admin-uanadir.php">Añadir</a></li>
+                    <li><a href="admin-ubuscar.php">Buscar</a></li>
+                    <li><a href="admin-umodificar.php">Modificar</a></li>
+                    <li><a href="admin-uborrar.php">Borrar</a></li>
                 </ul>
             </li>
             <li><a href="">Alquileres</a>
                 <ul>
-                    <li><a href="alistar.php">Listar</a></li>
-                    <li><a href="aborrar.php">Borrar</a></li>
+                    <li><a href="admin-alistar.php">Listar</a></li>
+                    <li><a href="admin-aborrar.php">Borrar</a></li>
                 </ul>
             </li>
         </ul>

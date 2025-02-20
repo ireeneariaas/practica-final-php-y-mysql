@@ -18,8 +18,8 @@
             width: 350px;
             padding-left: 50px;
             padding-right: 70px;
-            padding-top: 10px;
-            padding-bottom: 10px;
+            padding-top: 8px;
+            padding-bottom: 8px;
             margin: 50px auto;
             margin-top: 22px;
             border-radius: 8px;
@@ -108,8 +108,6 @@
         .error {
             color: white;
         }
-
-        h2 {padding-bottom: 11px;}
     </style>
 </head>
 <body>
@@ -137,14 +135,14 @@
             <label for="pass">Contraseña</label>
             <input type="password" id="pass" name="pass" required>
 
-            <label for="pass_repeat">Repetir Contraseña</label>
+            <label for="pass_repeat">Repetir contraseña</label>
             <input type="password" id="pass_repeat" name="pass_repeat" required><br>
 
-            <label for="tipo_cliente">Tipo de Cliente:</label><br>
+            <label for="tipo_cliente">Tipo de Cliente:</label>
             <input type="radio" id="vendedor" name="tipo" value="Vendedor">Vendedor<br>
-            <input type="radio" id="comprador" name="tipo" value="Comprador">Comprador<br><br>
+            <input type="radio" id="comprador" name="tipo" value="Comprador">Comprador<br>
             <div id="div2">
-                <button type="submit">Registrar</button><br><br>
+                <button type="submit">Registrar</button><br>
                 <p> Una vez registrado, ya podras <a href='./incio_sesion.php'><b>iniciar sesión</b></a></p>
             </div>
         </form>

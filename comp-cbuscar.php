@@ -6,7 +6,7 @@
     <title>Buscar Coches</title>
     <style>
          body{align: center;
-            background-image: url("../concesionario.jpg");
+            background-image: url("./concesionario.jpg");
             background-size: cover; 
             background-position: center; 
             height: 800px;
@@ -117,29 +117,16 @@ form input {
     </div>
     <div>
         <ul class="menu">
-        <li><a href="inicio.html">Inicio</a></li>
             <li><a href="">Coches</a>
                 <ul>
-                    <li><a href="clistar.php">Listar</a></li>
-                    <li><a href="canadir.php">Añadir</a></li>
-                    <li><a href="cbuscar.php">Buscar</a></li>
-                    <li><a href="cmodificar.php">Modificar</a></li>
-                    <li><a href="cborrar.php">Borrar</a></li>
-                </ul>
-            </li>
-            <li><a href="">Usuarios</a>
-                <ul>
-                    <li><a href="ulistar.php">Listar</a></li>
-                    <li><a href="uanadir.php">Añadir</a></li>
-                    <li><a href="ubuscar.php">Buscar</a></li>
-                    <li><a href="umodificar.php">Modificar</a></li>
-                    <li><a href="uborrar.php">Borrar</a></li>
+                    <li><a href="comp-clistar.php">Listar</a></li>
+                    <li><a href="comp-cbuscar.php">Buscar</a></li>
                 </ul>
             </li>
             <li><a href="">Alquileres</a>
                 <ul>
-                    <li><a href="alistar.php">Listar</a></li>
-                    <li><a href="aborrar.php">Borrar</a></li>
+                    <li><a href="comp-alistar.php">Listar</a></li>
+                    <li><a href="comp-alquilar.php">Alquilar</a></li>
                 </ul>
             </li>
         </ul>

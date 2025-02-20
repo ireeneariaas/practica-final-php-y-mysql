@@ -5,7 +5,7 @@
 <style>
         body{background-color:gray;
             align: center;
-            background-image: url("../concesionario.jpg");
+            background-image: url("./concesionario.jpg");
             background-size: cover; /* La imagen cubre toda la pantalla */
             background-position: center; /* Centra la imagen de fondo */
             height: 800px;
@@ -83,38 +83,37 @@
         }
     </style>
     <div id="titulo">
-        <h1>COCHES</h1>
+        <h1>USUARIOS</h1>
     </div>
     <div>
         <ul class="menu">
-        <li><a href="inicio.html">Inicio</a></li>
             <li><a href="">Coches</a>
                 <ul>
-                    <li><a href="clistar.php">Listar</a></li>
-                    <li><a href="canadir.php">Añadir</a></li>
-                    <li><a href="cbuscar.php">Buscar</a></li>
-                    <li><a href="cmodificar.php">Modificar</a></li>
-                    <li><a href="cborrar.php">Borrar</a></li>
+                    <li><a href="admin-clistar.php">Listar</a></li>
+                    <li><a href="admin-canadir.php">Añadir</a></li>
+                    <li><a href="admin-cbuscar.php">Buscar</a></li>
+                    <li><a href="admin-cmodificar.php">Modificar</a></li>
+                    <li><a href="admin-cborrar.php">Borrar</a></li>
                 </ul>
             </li>
             <li><a href="">Usuarios</a>
                 <ul>
-                    <li><a href="ulistar.php">Listar</a></li>
-                    <li><a href="uanadir.php">Añadir</a></li>
-                    <li><a href="ubuscar.php">Buscar</a></li>
-                    <li><a href="umodificar.php">Modificar</a></li>
-                    <li><a href="uborrar.php">Borrar</a></li>
+                    <li><a href="admin-ulistar.php">Listar</a></li>
+                    <li><a href="admin-uanadir.php">Añadir</a></li>
+                    <li><a href="admin-ubuscar.php">Buscar</a></li>
+                    <li><a href="admin-umodificar.php">Modificar</a></li>
+                    <li><a href="admin-uborrar.php">Borrar</a></li>
                 </ul>
             </li>
             <li><a href="">Alquileres</a>
                 <ul>
-                    <li><a href="alistar.php">Listar</a></li>
-                    <li><a href="aborrar.php">Borrar</a></li>
+                    <li><a href="admin-alistar.php">Listar</a></li>
+                    <li><a href="admin-aborrar.php">Borrar</a></li>
                 </ul>
             </li>
         </ul>
     </div>
-    <h1>Borrar coches</h1>
+    <h1>Borrar usuarios</h1>
     <?php
     // Datos de conexión a la base de datos
     $servername = "localhost";  // Cambia esto si el servidor es diferente
@@ -127,27 +126,21 @@
     if (!$conn) {
         die("Connection failed: " . mysqli_connect_error());
     }
-    $sql = "SELECT id_coche, modelo, marca, color, precio, alquilado, foto FROM coches";
-    $result = mysqli_query($conn, $sql);
-    if (!$conn) {
-        die("Connection failed: " . mysqli_connect_error());
-    }
-    $sql = "SELECT id_coche, modelo, marca, color, precio, alquilado, foto FROM coches";
+    $sql = "SELECT id_usuario, password, nombre, apellidos, dni, saldo FROM usuarios";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
-        echo "<h1>Borrado de coches</h1>";
-        echo "<form action='cborrar2.php' method='post'>";
+        echo "<form action='uborrar2.php' method='post'>";
         echo "<table border='1'>";
-        echo "<tr><th>Seleccionar</th><th>Modelo</th><th>Marca</th><th>Color</th><th>Precio</th><th>Alquilado</th><th>Foto</th></tr>";
+        echo "<tr><th>Seleccionar</th><th>Password</th><th>Nombre</th><th>Apellidosr</th><th>Dni</th><th>Saldo</th></tr>";
         // Mostrar cada piso con su checkbox
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr>";
-            echo "<td><input type='checkbox' name='delete_ids[]' value='" . $row['id_coche'] . "'></td>";
-            echo "<td>" . htmlspecialchars($row['modelo']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['marca']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['color']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['precio']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['alquilado']) . "</td>";
+            echo "<td><input type='checkbox' name='delete_ids[]' value='" . $row['id_usuario'] . "'></td>";
+            echo "<td>" . htmlspecialchars($row['password']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['nombre']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['apellidos']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['dni']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['saldo']) . "</td>";
             echo "</tr>";
         }
         echo "</table>";
@@ -155,9 +148,8 @@
         echo "<button type='submit'>Eliminar seleccionados</button>";
         echo "</form>";
     } else {
-        echo "<h1>No hay coches disponibles</h1>";
+        echo "<h1>No hay usuarios disponibles</h1>";
     }
-
     
     // Cerrar conexión
     mysqli_close($conn);

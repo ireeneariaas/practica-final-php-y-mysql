@@ -7,7 +7,7 @@
     <style>
         body{background-color:gray;
             align: center;
-            background-image: url("../concesionario.jpg");
+            background-image: url("./concesionario.jpg");
             background-size: cover; 
             background-position: center; 
             height: 800px;
@@ -87,38 +87,26 @@
 </head>
 <body>
     <div id="titulo">
-        <h1>COCHES</h1>
+        <h1>ALQUILERES</h1>
     </div>
     <div>
         <ul class="menu">
-        <li><a href="inicio.html">Inicio</a></li>
             <li><a href="">Coches</a>
                 <ul>
-                    <li><a href="clistar.php">Listar</a></li>
-                    <li><a href="canadir.php">Añadir</a></li>
-                    <li><a href="cbuscar.php">Buscar</a></li>
-                    <li><a href="cmodificar.php">Modificar</a></li>
-                    <li><a href="cborrar.php">Borrar</a></li>
-                </ul>
-            </li>
-            <li><a href="">Usuarios</a>
-                <ul>
-                    <li><a href="ulistar.php">Listar</a></li>
-                    <li><a href="uanadir.php">Añadir</a></li>
-                    <li><a href="ubuscar.php">Buscar</a></li>
-                    <li><a href="umodificar.php">Modificar</a></li>
-                    <li><a href="uborrar.php">Borrar</a></li>
+                    <li><a href="comp-clistar.php">Listar</a></li>
+                    <li><a href="comp-cbuscar.php">Buscar</a></li>
                 </ul>
             </li>
             <li><a href="">Alquileres</a>
                 <ul>
-                    <li><a href="alistar.php">Listar</a></li>
-                    <li><a href="aborrar.php">Borrar</a></li>
+                    <li><a href="comp-alistar.php">Listar</a></li>
+                    <li><a href="comp-alquilar.php">Alquilar</a></li>
                 </ul>
             </li>
         </ul>
     </div>
-    <h1>Listado de Coches</h1>
+    </div>
+    <h1>Listado de Alquileres</h1>
     <table border=1>
         <tr>
             <th>ID</th>
@@ -138,33 +126,33 @@
         // Crear la conexión
         $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-        // Verificar la conexión
         if (!$conn) {
-            die("Conexión fallida: " . mysqli_connect_error());
+            die("Connection failed: " . mysqli_connect_error());
         }
-
-        // Consulta para obtener todos los coches
-        $sql = "SELECT * FROM coches";
+        $sql = "SELECT * FROM Alquileres";
         $result = mysqli_query($conn, $sql);
-
-        // Verificar si hay resultados
         if (mysqli_num_rows($result) > 0) {
-            // Mostrar cada fila de datos en la tabla
+            echo "<form action='borraralquileres2.php' method='post'>";
+            echo "<table border='1'>";
+            echo "<tr><th>Seleccionar</th><th>id_alquiler</th><th>id_usuario</th><th>id_coche</th><th>Dni</th><th>Saldo</th></tr>";
+            // Mostrar cada piso con su checkbox
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>";
-                echo "<td>" . $row["id_coche"] . "</td>"; // Mostrar ID
-                echo "<td>" . $row["modelo"] . "</td>"; // Mostrar Modelo
-                echo "<td>" . $row["marca"] . "</td>"; // Mostrar Marca
-                echo "<td>" . $row["color"] . "</td>"; // Mostrar Color
-                echo "<td>" . $row["precio"] . "</td>"; // Mostrar Precio
-                echo "<td>" . ($row["alquilado"] ? "Sí" : "No") . "</td>"; // Mostrar si está alquilado
+                echo "<td><input type='checkbox' name='delete_ids[]' value='" . $row['id_usuario'] . "'></td>";
+                echo "<td>" . htmlspecialchars($row['password']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['nombre']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['apellidos']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['dni']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['saldo']) . "</td>";
                 echo "</tr>";
             }
-        } else {
-            echo "<tr><td colspan='6'>No se encontraron coches en la base de datos.</td></tr>";
+            echo "</table>";
+            echo "<br>";
+            echo "<button type='submit'>Eliminar seleccionados</button>";
+            echo "</form>";
         }
 
-        // Cerrar la conexión
+        // Cerrar conexión
         mysqli_close($conn);
     ?>
     </table>

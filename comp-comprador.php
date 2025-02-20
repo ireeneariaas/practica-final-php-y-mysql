@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menú Horizontal</title>
+    <title>Comprador</title>
     <style>
         body {
             margin: 0; /* Elimina margen global del cuerpo */
             font-family: Arial;
-            background-image: url("./img/concesionario.jpg");
+            background-image: url("./concesionario.jpg");
             background-size: cover; /* La imagen cubre toda la pantalla */
             background-position: center; /* Centra la imagen de fondo */
             height: 800px;
@@ -80,32 +80,20 @@
 </head>
 <body>
     <div id="titulo">
-        <h1>CONCESIONARIO</h1>
+        <h1>COMPRADOR</h1>
     </div>
     <div>
         <ul class="menu">
             <li><a href="">Coches</a>
                 <ul>
-                    <li><a href="clistar.php">Listar</a></li>
-                    <li><a href="canadir.php">Añadir</a></li>
-                    <li><a href="cbuscar.php">Buscar</a></li>
-                    <li><a href="cmodificar.php">Modificar</a></li>
-                    <li><a href="cborrar.php">Borrar</a></li>
-                </ul>
-            </li>
-            <li><a href="">Usuarios</a>
-                <ul>
-                    <li><a href="ulistar.php">Listar</a></li>
-                    <li><a href="uanadir.php">Añadir</a></li>
-                    <li><a href="ubuscar.php">Buscar</a></li>
-                    <li><a href="umodificar.php">Modificar</a></li>
-                    <li><a href="uborrar.php">Borrar</a></li>
+                    <li><a href="comp-clistar.php">Listar</a></li>
+                    <li><a href="comp-cbuscar.php">Buscar</a></li>
                 </ul>
             </li>
             <li><a href="">Alquileres</a>
                 <ul>
-                    <li><a href="alistar.php">Listar</a></li>
-                    <li><a href="aborrar.php">Borrar</a></li>
+                    <li><a href="comp-alistar.php">Listar</a></li>
+                    <li><a href="comp-alquilar.php">Alquilar</a></li>
                 </ul>
             </li>
         </ul>
