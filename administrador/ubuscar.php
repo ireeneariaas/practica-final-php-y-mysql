@@ -158,7 +158,7 @@ form input {
     <?php
     
        // Conectar con el servidor de base de datos
-        $conexion = mysqli_connect ("localhost", "root", "irene","concesionario")
+        $conexion = mysqli_connect ("localhost", "root", "rootroot","concesionario")
              or die ("No se puede conectar con el servidor");
             
        $password = $_REQUEST['password'];

@@ -177,7 +177,7 @@ form input {
             // Conexion a la base de datos
             $servername = "localhost";  
             $username = "root";         
-            $password = "irene";        
+            $password = "rootroot";        
             $dbname = "concesionario";  
 
             // Crear la conexion

@@ -148,7 +148,7 @@ form input {
         // Configuración de la base de datos
         $servername = "localhost";
         $username = "root";
-        $password = "irene";
+        $password = "rootroot";
         $dbname = "concesionario";
 
         // Crear conexión

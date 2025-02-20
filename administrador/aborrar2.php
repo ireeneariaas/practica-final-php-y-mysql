@@ -118,7 +118,7 @@
         </ul>
     </div>
     <?php
-        $conn = mysqli_connect("localhost", "root", "irene", "concesionario");
+        $conn = mysqli_connect("localhost", "root", "rootroot", "concesionario");
         if (!$conn) {
             die("Connection failed: " . mysqli_connect_error());
         }

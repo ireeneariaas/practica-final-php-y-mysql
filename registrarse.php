@@ -5,18 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Usuario</title>
     <style>
-        body {
+        #titulo {
             background-color: gray;
-            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0px;
+            padding: 0px;
+            text-align:center;
         }
 
         #div1 {
             background-color: white;
-            width: 300px;
-            padding: 20px;
-            padding-right: 40px;
+            width: 350px;
+            padding-left: 50px;
+            padding-right: 70px;
+            padding-top: 10px;
+            padding-bottom: 10px;
             margin: 50px auto;
+            margin-top: 22px;
             border-radius: 8px;
+        }
+
+        #div2 {
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            padding: 10px;
+            text-align: center;
         }
 
         label {
@@ -24,11 +40,31 @@
             margin: 10px 0 5px;
         }
 
-        input {
+        #nombre_usuario {
             width: 100%;
             padding: 8px;
             margin-bottom: 10px;
         }
+
+        #nombre {width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;}
+
+        #apellidos {width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;}
+
+        #dni {width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;}
+
+        #saldo {width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;}
+
+        #pass {width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;}
 
         button {
             background-color: black;
@@ -49,7 +85,7 @@
         body {
             margin: 0;
             font-family: Arial;
-            background-image: url("./img/concesionario.jpg");
+            background-image: url("./concesionario.jpg");
             background-size: cover;
             background-position: center;
             height: 800px;
@@ -66,11 +102,16 @@
         }
 
         .error {
-            color: red;
+            color: white;
         }
+
+        h2 {padding-bottom: 11px;}
     </style>
 </head>
 <body>
+    <div id="titulo">
+        <h1>CONCESIONARIO</h1>
+    </div>
     <div id="div1">
         <h2>Registrar Usuario</h2>
         <form action="registrarse.php" method="POST">
@@ -89,16 +130,16 @@
             <label for="saldo">Saldo</label>
             <input type="number" step="0.01" id="saldo" name="saldo" required>
 
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password" required><br>
+            <label for="pass">Contraseña</label>
+            <input type="password" id="pass" name="pass" required><br>
 
             <label for="tipo_cliente">Tipo de Cliente:</label><br>
-            Vendedor<input type="radio" id="vendedor" name="tipo" value="Vendedor" required>
-            Comprador<input type="radio" id="comprador" name="tipo" value="Comprador" required>
-            Administrador<input type="radio" id="administrador" name="tipo" value="Administrador" required>
-        
-            <button type="submit">Registrar</button>
-            <p> Una vez registrado, ya podrás <a href='./incio_sesion.php'><b>iniciar sesión</b></a></p>
+            <input type="radio" id="vendedor" name="tipo" value="Vendedor">Vendedor<br>
+            <input type="radio" id="comprador" name="tipo" value="Comprador">Comprador<br><br>
+            <div id="div2">
+                <button type="submit">Registrar</button><br><br>
+                <p> Una vez registrado, ya podras <a href='./incio_sesion.php'><b>iniciar sesión</b></a></p>
+            </div>
         </form>
     </div>
 
@@ -107,7 +148,7 @@
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $servername = "localhost";
             $username = "root";
-            $password = "irene";
+            $password = "rootroot";
             $dbname = "concesionario";
 
             // Conectar a la base de datos
@@ -149,7 +190,7 @@
             // Cerrar la conexión
             mysqli_close($conn);
         }
-        ?>
+        ?><br><br><br>
     </div>
 </body>
 </html>

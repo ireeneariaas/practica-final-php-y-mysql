@@ -181,7 +181,7 @@
             // Datos de conexión a la base de datos
             $servername = "localhost";  // Cambia esto si el servidor es diferente
             $username = "root";         // Usuario de MySQL
-            $password = "irene";        // Contraseña de MySQL
+            $password = "rootroot";        // Contraseña de MySQL
             $dbname = "concesionario";  // Nombre de la base de datos existente
         
             // Crear la conexión

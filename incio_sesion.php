@@ -17,6 +17,7 @@
             padding-right: 40px;
             margin: 50px auto;
             border-radius: 8px;
+        }
         
         label {
             display: block;
@@ -100,7 +101,7 @@
 
             // Verificar si los campos están vacíos
             if (usuario.trim() === "" || contraseña.trim() === "") {
-                message.innerHTML = "<p style='color: red;'>Por favor, completa ambos campos.</p>";
+                message.innerHTML = "<p style='color: white;'>Por favor, completa todos los campos.</p>";
                 return false; // Impide que el formulario se envíe
             }
 
@@ -117,7 +118,7 @@
         // Datos de conexión a la base de datos
         $servername = "localhost";
         $username = "root";
-        $password = "irene";
+        $password = "rootroot";
         $dbname = "concesionario";
 
         // Crear la conexión
