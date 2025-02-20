@@ -1,42 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-<style>
-        body{background-color:gray;
-            align: center;
-            background-image: url("./concesionario.jpg");
-            background-size: cover; /* La imagen cubre toda la pantalla */
-            background-position: center; /* Centra la imagen de fondo */
-            height: 800px;
+    <title>Modificar Usuario</title>
+    <style>
+        body {
+            background-color: gray;
+            font-family: Arial, sans-serif;
             margin: 0;
-            font-family: Arial;}
+            background-image: url("./concesionario.jpg");
+            background-size: cover;
+            background-position: center;
+            height: 800px;
+        }
 
-        table{background-color:white;
-            width: 60%;
-            text-align: center;
-            align-items: center;}
-            
-        h1{color:white;}
-       
         #titulo {
             background-color: gray;
             color: white;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            margin: 0;
-            padding: 10px;
+            padding: 0;  /* Eliminar padding */
+            margin: 0;   /* Eliminar margen */
             text-align: center;
         }
 
-        /* Estilos generales para el menú */
+        h1 {
+            margin: 0; /* Eliminar el margen predeterminado */
+            padding: 10px 0; /* Establecer padding adecuado */
+        }
+
+        table {
+            background-color: white;
+            margin: 20px auto;
+            width: 85%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        input {
+            width: 90%;
+            padding: 4px;
+        }
+
+        button {
+            background-color: black;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            text-align: center;
+            color: white;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        /* Estilos del menú */
         ul {
             list-style: none;
             padding: 0;
@@ -68,116 +95,136 @@
             white-space: nowrap;
         }
 
-        a:hover {
-            background: #ddd;
-        }
-
-        /* Menú principal en horizontal */
         .menu {
             display: flex;
-            justify-content: center; /* Centra el menú horizontalmente */
+            justify-content: center;
             background: #f1f1f1;
             border: 1px solid #ccc;
             margin: 0;
             padding: 0;
         }
 
-        .menu > li {
-            flex: none;
+        #div1 {
+            background-color: white;
+            width: 1200px;
+            padding: 10px;
+            margin: 0px auto;
+            border-radius: 8px;
         }
-        #div3 {
-    background-color: white;
-    padding: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 400px;
-    border-radius: 8px;
-}
-
-form {
-    margin: 0;
-    padding: 0;
-}
-
-form input {
-    margin: 2px 0; 
-    padding: 5px;
-    width:380px; 
-}
     </style>
+</head>
+<body>
+
 <div id="titulo">
-        <h1>USUARIOS</h1>
-    </div>
-    <div>
-        <ul class="menu">
-            <li><a href="">Coches</a>
-                <ul>
-                    <li><a href="admin-clistar.php">Listar</a></li>
-                    <li><a href="admin-canadir.php">Añadir</a></li>
-                    <li><a href="admin-cbuscar.php">Buscar</a></li>
-                    <li><a href="admin-cmodificar.php">Modificar</a></li>
-                    <li><a href="admin-cborrar.php">Borrar</a></li>
-                </ul>
-            </li>
-            <li><a href="">Usuarios</a>
-                <ul>
-                    <li><a href="admin-ulistar.php">Listar</a></li>
-                    <li><a href="admin-uanadir.php">Añadir</a></li>
-                    <li><a href="admin-ubuscar.php">Buscar</a></li>
-                    <li><a href="admin-umodificar.php">Modificar</a></li>
-                    <li><a href="admin-uborrar.php">Borrar</a></li>
-                </ul>
-            </li>
-            <li><a href="">Alquileres</a>
-                <ul>
-                    <li><a href="admin-alistar.php">Listar</a></li>
-                    <li><a href="admin-aborrar.php">Borrar</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-    <h1>Modificar usuarios</h1>
-    <div id="div3">
-    <form action="" method="post">
-        Id del usuario:<input type="text" name="id_usuario"><br>
-        <input type="submit" value="Actualizar">
-    </form>
-    </div>
-    <?php
-        // Configuración de la base de datos
-        $servername = "localhost";
-        $username = "root";
-        $password = "rootroot";
-        $dbname = "concesionario";
+    <h1>USUARIOS</h1>
+</div>
 
-        // Crear conexión
-        $conn = mysqli_connect($servername, $username, $password, $dbname);
+<div>
+    <ul class="menu">
+        <li><a href="">Coches</a>
+            <ul>
+                <li><a href="admin-clistar.php">Listar</a></li>
+                <li><a href="admin-canadir.php">Añadir</a></li>
+                <li><a href="admin-cbuscar.php">Buscar</a></li>
+                <li><a href="admin-cmodificar.php">Modificar</a></li>
+                <li><a href="admin-cborrar.php">Borrar</a></li>
+            </ul>
+        </li>
+        <li><a href="">Usuarios</a>
+            <ul>
+                <li><a href="admin-ulistar.php">Listar</a></li>
+                <li><a href="admin-uanadir.php">Añadir</a></li>
+                <li><a href="admin-ubuscar.php">Buscar</a></li>
+                <li><a href="admin-umodificar.php">Modificar</a></li>
+                <li><a href="admin-uborrar.php">Borrar</a></li>
+            </ul>
+        </li>
+        <li><a href="">Alquileres</a>
+            <ul>
+                <li><a href="admin-alistar.php">Listar</a></li>
+                <li><a href="admin-aborrar.php">Borrar</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
 
-        // Verificar la conexión
-        if (!$conn) {
-            die("Conexión fallida: " . mysqli_connect_error());
+<h1 style="text-align: center; color: white;">Modificar usuarios</h1>
+
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "rootroot";
+$dbname = "concesionario";
+
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+if (!$conn) {
+    die("Error de conexión: " . mysqli_connect_error());
+}
+
+$mensaje = ''; // Variable para almacenar el mensaje de éxito o error
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Recorrer todos los usuarios y actualizar sus datos
+    foreach ($_POST['id_usuario'] as $index => $id_usuario) {
+        $nombre = $_POST['nombre'][$index];
+        $apellidos = $_POST['apellidos'][$index];
+        $dni = $_POST['dni'][$index];
+        $saldo = $_POST['saldo'][$index];
+        $tipo = $_POST['tipo'][$index];
+        $nombre_usuario = $_POST['nombre_usuario'][$index];
+
+        // Consulta SQL para actualizar el usuario
+        $sql = "UPDATE usuarios SET nombre='$nombre', apellidos='$apellidos', dni='$dni', saldo='$saldo', tipo='$tipo', nombre_usuario='$nombre_usuario' WHERE id_usuario='$id_usuario'";
+
+        // Ejecutar la consulta y verificar si se realizó correctamente
+        if (!mysqli_query($conn, $sql)) {
+            $mensaje = "<p class='message' style='color:white;'>No se ha podido actualizar el usuario con ID $id_usuario: " . mysqli_error($conn) . "</p>";
+            break;
         }
-        // Recuperar datos del formulario
-        $id_usuario=$_POST['id_usuario'];
-        $password =  $_POST['contraseña'];
-        $nombre =  $_POST['nombre'];
-        $apellidos = $_POST['apellidos'];
-        $dni = $_POST['dni'];
-        $saldo = $_POST['saldo'];
+    }
 
+    // Si no hubo errores, se muestra el mensaje de éxito
+    if (empty($mensaje)) {
+        $mensaje = "<p class='message'>Todos los usuarios han sido actualizados con éxito.</p>";
+    }
+}
 
-        // Preparar y ejecutar la consulta de inserción
-        $sql = "UPDATE usuarios SET password='$password', nombre='$nombre', apellidos='$apellidos', dni='$dni', saldo='$saldo' WHERE id_usuario='$id_usuario'";
+$sql = "SELECT * FROM usuarios";
+$result = mysqli_query($conn, $sql);
 
+echo "<div id='div1'>"; // El div1 sigue conteniendo la tabla y el formulario
+echo "<form method='post'>";  // Abrir un solo formulario para todos los usuarios
+echo "<table border=1>";
+echo "<tr><th>ID</th><th>Nombre</th><th>Apellidos</th><th>DNI</th><th>Saldo</th><th>Tipo</th><th>Nombre de Usuario</th></tr>";
 
-        if (mysqli_query($conn, $sql)) {
-            echo "<p style='text-align: center; color: white;'>usuario actualizado con éxito.</p>";
-        } else {
-            echo "Error al actualizar: " . mysqli_error($conn);
-        }
+if (mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        echo "<tr>
+                <td><input type='text' name='id_usuario[]' value='" . $row['id_usuario'] . "' readonly></td>
+                <td><input type='text' name='nombre[]' value='" . $row['nombre'] . "'></td>
+                <td><input type='text' name='apellidos[]' value='" . $row['apellidos'] . "'></td>
+                <td><input type='text' name='dni[]' value='" . $row['dni'] . "'></td>
+                <td><input type='text' name='saldo[]' value='" . $row['saldo'] . "'></td>
+                <td><input type='text' name='tipo[]' value='" . $row['tipo'] . "'></td>
+                <td><input type='text' name='nombre_usuario[]' value='" . $row['nombre_usuario'] . "'></td>
+              </tr>";
+    }
+    echo "</table>";
 
-        // Cerrar la conexión
-        mysqli_close($conn);
+    // Botón para actualizar todos los usuarios
+    echo "<div style='text-align: center;'><button type='submit'>Modificar y Guardar</button></div>";
+} else {
+    echo "<p class='message'>No hay usuarios disponibles.</p>";
+}
+
+echo "</form>";  // Cerrar el formulario
+echo "</div>"; // Cerrar el div1
+
+// Mostrar el mensaje después de la tabla
+echo $mensaje;
+
+mysqli_close($conn);
 ?>
+
 </body>
 </html>
