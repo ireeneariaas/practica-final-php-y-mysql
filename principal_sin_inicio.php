@@ -54,7 +54,7 @@
     </div>
     <div id=div3>
         <h3>¡Bienvenido al Concesionario!</h3><br>
-        <p>Si aun no eres cliente nuestro, <a href="./registrarse.php" class="azul">¡hazte ya!</a>. Pero si ya formas parte del concesionario, <a href="./incio_sesion.php" class="azul">inicia sesion</a> para poder alquilar coches y ver las nuevas novedades.</p><br>
+        <p>Si aun no eres cliente nuestro, <a href="./registrarse.php" class="azul">¡hazte ya!</a>. Pero si ya formas parte del concesionario, <a href="./inicio_sesion.php" class="azul">inicia sesion</a> para poder alquilar coches y ver las nuevas novedades.</p><br>
         <a href="./clistar_sin_inicio.php" class="azul">Continuar sin iniciar sesion</a>
     </div>
 </body>

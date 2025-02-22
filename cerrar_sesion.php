@@ -39,12 +39,12 @@
         #div3 {
             background-color: white;
             margin: 100px;
-            padding:20px;
+            padding: 20px;
             margin-left: auto;
             margin-right: auto;
             width: 700px;
             border-radius: 8px;
-            text-align: center
+            text-align: center;
         }
     </style>
 </head>
@@ -52,10 +52,19 @@
     <div id="titulo">
         <h1>CONCESIONARIO</h1>
     </div>
-    <div id=div3>
-        <h3>Has cerrado sesion con tu usuario.</h3><br>
-        <p>Para volver a inciar sesion, <a href="./inciio_sesion.php" class="azul">pulsa aqui</a>.
-        <a href="./clistar_sin_inicio.php" class="azul">Continuar sin iniciar sesion</a>
+    <div id="div3">
+        <?php
+        session_start(); // Iniciar la sesión
+
+        $nombre_usuario = $_SESSION['usuario']; // Obtener el nombre de usuario
+        echo "<h2>Has cerrado sesion en tu cuenta.</h2><br>";
+        echo "<h3>Hasta pronto, $nombre_usuario</h3><br><br>";
+
+        // Destruir la sesión
+        session_destroy();
+        ?>
+        <p>Para volver a iniciar sesión, <a href="./inicio_sesion.php" class="azul">pulsa aquí</a>.</p>
+        <a href="./clistar_sin_inicio.php" class="azul"><br><br>Continuar sin iniciar sesión</a>
     </div>
 </body>
 </html>

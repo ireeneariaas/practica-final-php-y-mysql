@@ -79,9 +79,6 @@
     <div id="titulo">
         <h1>CONCESIONARIO</h1>
     </div>
-    <form action="logout.php" method="post">
-        <button type="submit" class="logout-button">Cerrar sesión</button>
-    </form>
     <div id="div1">
         <h2>Iniciar Sesión</h2>
         <form id="loginForm" action="" method="post" onsubmit="return validateForm()">

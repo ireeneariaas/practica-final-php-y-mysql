@@ -139,11 +139,26 @@
         #div2 {
             text-align: center;
         }
+
+        .logout-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
     <div id="titulo">
         <h1>VENDEDOR</h1>
+        <form action="cerrar_sesion.php" method="post">
+            <button type="submit" class="logout-button">Cerrar sesión</button>
+        </form>
     </div>
 
     <div>
