@@ -114,81 +114,84 @@
             return true; // Permite que el formulario se envíe
         }
     </script>
-
     <?php
-        session_start(); // Iniciar la sesión al principio
+session_start(); // Iniciar la sesión al principio
 
-        // Datos de conexión a la base de datos
-        $servername = "localhost";
-        $username = "root";
-        $password = "rootroot";
-        $dbname = "concesionario";
+// Datos de conexión a la base de datos
+$servername = "localhost";
+$username = "root";
+$password = "rootroot";
+$dbname = "concesionario";
 
-        // Crear la conexión
-        $conn = mysqli_connect($servername, $username, $password, $dbname);
+// Crear la conexión
+$conn = mysqli_connect($servername, $username, $password, $dbname);
 
-        // Verificar la conexión
-        if (!$conn) {
-            die("<p style='text-align: center; color: white;'>Conexión fallida: " . mysqli_connect_error() . "</p>");
-        }
+// Verificar la conexión
+if (!$conn) {
+    die("<p style='text-align: center; color: white;'>Conexión fallida: " . mysqli_connect_error() . "</p>");
+}
 
-        // Verificar si el formulario fue enviado
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $usuario = $_POST['usuario'];  // Nombre de usuario del formulario
-            $contrasena = $_POST['contraseña'];  // Contraseña del formulario
+// Verificar si el formulario fue enviado
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $usuario = $_POST['usuario'];  // Nombre de usuario del formulario
+    $contrasena = $_POST['contraseña'];  // Contraseña del formulario
 
-            // Consulta para verificar si el usuario existe en la base de datos
-            $sql = "SELECT * FROM usuarios WHERE nombre_usuario = '$usuario'"; 
-            $result = mysqli_query($conn, $sql);
+    // Consulta para verificar si el usuario existe en la base de datos
+    $sql = "SELECT * FROM usuarios WHERE nombre_usuario = '$usuario'"; 
+    $result = mysqli_query($conn, $sql);
 
-            // Verificar si el usuario existe
-            if (mysqli_num_rows($result) > 0) {
-                $row = mysqli_fetch_assoc($result);
+    // Verificar si el usuario existe
+    if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
 
-                // Si el tipo de usuario es "Administrador", verificamos la contraseña sin cifrar
-                if ($row['tipo'] == 'Administrador') {
-                    if ($contrasena == $row['password']) {
-                        // Iniciar sesión y guardar el tipo de usuario
-                        $_SESSION['usuario'] = $usuario;
-                        $_SESSION['tipo_usuario'] = $row['tipo'];  // Guardamos el tipo de usuario
+        // Guardar el id_usuario en la sesión
+        $_SESSION['id_usuario'] = $row['id_usuario']; // Aquí almacenamos el id_usuario en la sesión
 
-                        // Redirigir al administrador
-                        header("Location: admin-inicio.php");
+        // Si el tipo de usuario es "Administrador", verificamos la contraseña sin cifrar
+        if ($row['tipo'] == 'Administrador') {
+            if ($contrasena == $row['password']) {
+                // Iniciar sesión y guardar el tipo de usuario
+                $_SESSION['usuario'] = $usuario;
+                $_SESSION['tipo_usuario'] = $row['tipo'];  // Guardamos el tipo de usuario
+
+                // Redirigir al administrador
+                header("Location: admin-inicio.php");
+                exit();
+            } else {
+                echo "<p style='text-align: center; color: white;'>Contraseña incorrecta para Administrador.</p>";
+            }
+        } else {
+            // Si no es administrador, verificamos la contraseña cifrada usando password_verify()
+            if (password_verify($contrasena, $row['password'])) {
+                // Iniciar sesión y guardar el tipo de usuario
+                $_SESSION['usuario'] = $usuario;
+                $_SESSION['id_usuario'] = $row['id_usuario']; // Guardamos el id del usuario
+                $_SESSION['tipo_usuario'] = $row['tipo'];  // Guardamos el tipo de usuario
+
+                // Redirigir dependiendo del tipo de usuario
+                switch ($row['tipo']) {
+                    case 'Vendedor':
+                        header("Location: ven-vendedor.php"); // Redirige a la página de vendedor
                         exit();
-                    } else {
-                        echo "<p style='text-align: center; color: white;'>Contraseña incorrecta para Administrador.</p>";
-                    }
-                } else {
-                    // Si no es administrador, verificamos la contraseña cifrada usando password_verify()
-                    if (password_verify($contrasena, $row['password'])) {
-                        // Iniciar sesión y guardar el tipo de usuario
-                        $_SESSION['usuario'] = $usuario;
-                        $_SESSION['tipo_usuario'] = $row['tipo'];  // Guardamos el tipo de usuario
-
-                        // Redirigir dependiendo del tipo de usuario
-                        switch ($row['tipo']) {
-                            case 'Vendedor':
-                                header("Location: ven-vendedor.php"); // Redirige a la página de vendedor
-                                exit();
-                            case 'Comprador':
-                                header("Location: comp-comprador.php"); // Redirige a la página de comprador
-                                exit();
-                            default:
-                                echo "<p style='text-align: center; color: white;'>Tipo de usuario desconocido.</p>";
-                                break;
-                        }
-                    } else {
-                        echo "<p style='text-align: center; color: white;'>Contraseña incorrecta.</p>";
-                    }
+                    case 'Comprador':
+                        header("Location: comp-comprador.php"); // Redirige a la página de comprador
+                        exit();
+                    default:
+                        echo "<p style='text-align: center; color: white;'>Tipo de usuario desconocido.</p>";
+                        break;
                 }
             } else {
-                echo "<p style='text-align: center; color: white;'>Este usuario no está registrado en la base de datos del concesionario.</p>";
+                echo "<p style='text-align: center; color: white;'>Contraseña incorrecta.</p>";
             }
         }
+    } else {
+        echo "<p style='text-align: center; color: white;'>Este usuario no está registrado en la base de datos del concesionario.</p>";
+    }
+}
 
-        // Cerrar la conexión
-        mysqli_close($conn);
-    ?>
+// Cerrar la conexión
+mysqli_close($conn);
+?>
 
 </body>
 </html>

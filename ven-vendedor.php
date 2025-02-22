@@ -76,6 +76,13 @@
         .menu > li {
             flex: none;
         }
+
+        .welcome-message {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
     </style>
 </head>
 <body>
@@ -92,5 +99,20 @@
             </li>
         </ul>
     </div>
+    <div id="div1">
+        <h1> Bienvenido </h1>
+    </div>
+    <?php
+session_start(); // Iniciar la sesión
+
+// Verifica si el usuario está logueado
+if (!isset($_SESSION['id_usuario'])) {
+    echo "<p>No estás logueado. Por favor, inicia sesión primero.</p>";
+    exit(); // Si no está logueado, detener el proceso
+}
+
+// Obtener el ID del vendedor logueado
+$id_vendedor = $_SESSION['id_usuario']; // Aquí asumimos que ya se ha logueado correctamente
+?>
 </body>
 </html>
