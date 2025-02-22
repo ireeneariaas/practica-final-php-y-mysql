@@ -120,15 +120,17 @@
         }
 
         .logout-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: black; /* Color negro */
+    color: white; /* Texto en blanco */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 
     </style>
 </head>

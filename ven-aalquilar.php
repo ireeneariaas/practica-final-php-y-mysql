@@ -144,7 +144,6 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;

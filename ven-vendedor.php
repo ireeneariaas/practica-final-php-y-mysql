@@ -3,20 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VENDEDOR</title>
+    <title>Listado de Alquileres</title>
     <style>
         body {
-            margin: 0; /* Elimina margen global del cuerpo */
-            font-family: Arial;
+            background-color: gray;
+            align: center;
             background-image: url("./concesionario.jpg");
-            background-size: cover; /* La imagen cubre toda la pantalla */
-            background-position: center; /* Centra la imagen de fondo */
+            background-size: cover;
+            background-position: center;
             height: 800px;
+            margin: 0;
+            font-family: Arial;
+            align-items: center;
+        }
+
+        table {
+            background-color: white;
+            width: 60%;
+            text-align: center;
+            align-items: center;
+            border-collapse: collapse;
+            margin: 0 auto; /* Esto centra la tabla */
+        }
+
+        h1 {
+            color: white;
         }
 
         #titulo {
             background-color: gray;
-            color: white;
             margin: 0;
             padding: 0;
         }
@@ -77,24 +92,25 @@
             flex: none;
         }
 
-        .welcome-message {
-            text-align: center;
-            color: white;
-            margin-top: 20px;
-            font-size: 1.5em;
+        td {
+            color: #2f2f2f;
         }
-
+        
         .logout-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: black; /* Color negro */
+    color: white; /* Texto en blanco */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
+        .logout-button:hover {
+            background-color: #333; /* Color más oscuro al pasar el ratón */
+        }
     </style>
 </head>
 <body>
@@ -104,9 +120,6 @@
             <button type="submit" class="logout-button">Cerrar sesión</button>
         </form>
     </div>
-    <form action="cerrar_sesion.php" method="post">
-        <button type="submit" class="logout-button">Cerrar sesión</button>
-    </form>
     <div>
         <ul class="menu">
             <li><a href="">Alquileres</a>
@@ -117,20 +130,64 @@
             </li>
         </ul>
     </div>
-    <div id="div1">
-        <h1> Bienvenido </h1>
-    </div>
-    <?php
-session_start(); // Iniciar la sesión
+    <h1>Listar alquileres realizados</h1>
+    <table border="1">
+        <tr>
+            <th>ID Coche</th>
+            <th>Modelo</th>
+            <th>Marca</th>
+            <th>Color</th>
+            <th>Precio</th>
+            <th>Alquilado</th>
+        </tr>
+        <?php
+        // Iniciar sesión
+        session_start();
 
-// Verifica si el usuario está logueado
-if (!isset($_SESSION['id_usuario'])) {
-    echo "<p>No estás logueado. Por favor, inicia sesión primero.</p>";
-    exit(); // Si no está logueado, detener el proceso
-}
+        // Obtener el ID del usuario logueado
+        $id_usuario = $_SESSION['id_usuario'];
 
-// Obtener el ID del vendedor logueado
-$id_vendedor = $_SESSION['id_usuario']; // Aquí asumimos que ya se ha logueado correctamente
-?>
+        // Datos de conexión
+        $servername = "localhost";
+        $username = "root";
+        $password = "rootroot";
+        $dbname = "concesionario";
+
+        // Crear la conexión
+        $conn = mysqli_connect($servername, $username, $password, $dbname);
+
+        // Verificar la conexión
+        if (!$conn) {
+            die("Conexión fallida: " . mysqli_connect_error());
+        }
+
+        // Consulta para obtener los alquileres del usuario logueado
+        $sql = "SELECT c.id_coche, c.modelo, c.marca, c.color, c.precio 
+                FROM coches c
+                INNER JOIN alquileres a ON c.id_coche = a.id_coche
+                WHERE a.id_usuario = '$id_usuario'";
+
+        $result = mysqli_query($conn, $sql);
+
+        // Mostrar resultados
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>";
+                echo "<td>" . $row["id_coche"] . "</td>";
+                echo "<td>" . $row["modelo"] . "</td>";
+                echo "<td>" . $row["marca"] . "</td>";
+                echo "<td>" . $row["color"] . "</td>";
+                echo "<td>" . $row["precio"] . "</td>";
+                echo "<td>Sí</td>"; // Alquilado "Sí" porque está en la tabla de alquileres
+                echo "</tr>";
+            }
+        } else {
+            echo "<tr><td colspan='6'>No tienes alquileres registrados.</td></tr>";
+        }
+
+        // Cerrar la conexión
+        mysqli_close($conn);
+        ?>
+    </table>
 </body>
 </html>

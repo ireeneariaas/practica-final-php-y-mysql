@@ -32,7 +32,6 @@
 
         #titulo {
             background-color: gray;
-            color: white;
             margin: 0;
             padding: 0;
         }
@@ -96,17 +95,22 @@
         td {
             color: #2f2f2f;
         }
+        
         .logout-button {
             position: absolute;
             top: 10px;
             right: 10px;
-            color: white;
+            background-color: black; /* Color negro */
+            color: white; /* Texto en blanco */
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
 
+        .logout-button:hover {
+            background-color: #333; /* Color más oscuro al pasar el ratón */
+        }
     </style>
 </head>
 <body>
