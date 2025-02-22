@@ -95,7 +95,7 @@
 </head>
 <body>
     <div id="titulo">
-        <h1>COCHES</h1>
+        <h1>COMPRADOR</h1>
     </div>
     <div>
         <ul class="menu">
@@ -123,45 +123,50 @@
             <th>Precio</th>
             <th>Alquilado</th>
         </tr>
-    <?php
-        // Datos de conexión a la base de datos
-        $servername = "localhost";  // Cambia esto si el servidor es diferente
-        $username = "root";         // Usuario de MySQL
-        $password = "rootroot";        // Contraseña de MySQL (cambia esto si es diferente)
-        $dbname = "concesionario";  // Nombre de la base de datos existente
+        <?php
+    // Datos de conexión
+    $servername = "localhost";
+    $username = "root";
+    $password = "rootroot";
+    $dbname = "concesionario";
 
-        // Crear la conexión
-        $conn = mysqli_connect($servername, $username, $password, $dbname);
+    // Crear la conexión
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-        // Verificar la conexión
-        if (!$conn) {
-            die("Conexión fallida: " . mysqli_connect_error());
+    // Verificar la conexión
+    if (!$conn) {
+        die("Conexión fallida: " . mysqli_connect_error());
+    }
+
+    // Consulta mejorada
+    $sql = "SELECT c.id_coche, c.modelo, c.marca, c.color, c.precio, a.id_usuario 
+            FROM coches c
+            INNER JOIN alquileres a ON c.id_coche = a.id_coche
+            INNER JOIN usuarios u ON a.id_usuario = u.id_usuario
+            WHERE u.tipo = 'comprador'";
+
+    $result = mysqli_query($conn, $sql);
+
+    // Mostrar resultados
+    if (mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo "<tr>";
+            echo "<td>" . $row["id_coche"] . "</td>";
+            echo "<td>" . $row["modelo"] . "</td>";
+            echo "<td>" . $row["marca"] . "</td>";
+            echo "<td>" . $row["color"] . "</td>";
+            echo "<td>" . $row["precio"] . "</td>";
+            echo "<td>Sí</td>"; // Alquilado siempre será "Sí" porque viene de la tabla alquileres
+            echo "</tr>";
         }
+    } else {
+        echo "<tr><td colspan='6'>No hay coches alquilados por compradores.</td></tr>";
+    }
 
-        // Consulta para obtener todos los coches
-        $sql = "SELECT * FROM coches";
-        $result = mysqli_query($conn, $sql);
+    // Cerrar la conexión
+    mysqli_close($conn);
+?>
 
-        // Verificar si hay resultados
-        if (mysqli_num_rows($result) > 0) {
-            // Mostrar cada fila de datos en la tabla
-            while ($row = mysqli_fetch_assoc($result)) {
-                echo "<tr>";
-                echo "<td>" . $row["id_coche"] . "</td>"; // Mostrar ID
-                echo "<td>" . $row["modelo"] . "</td>"; // Mostrar Modelo
-                echo "<td>" . $row["marca"] . "</td>"; // Mostrar Marca
-                echo "<td>" . $row["color"] . "</td>"; // Mostrar Color
-                echo "<td>" . $row["precio"] . "</td>"; // Mostrar Precio
-                echo "<td>" . ($row["alquilado"] ? "Sí" : "No") . "</td>"; // Mostrar si está alquilado
-                echo "</tr>";
-            }
-        } else {
-            echo "<tr><td colspan='6'>No se encontraron coches en la base de datos.</td></tr>";
-        }
-
-        // Cerrar la conexión
-        mysqli_close($conn);
-    ?>
     </table>
 
 </body>

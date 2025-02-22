@@ -40,7 +40,8 @@
         <h1>COCHES</h1>
     </div>
     <h1>Listado de Coches</h1>
-    <table border=1>
+    <table border=1 style="margin: auto;">
+
         <tr>
             <th>ID</th>
             <th>Modelo</th>

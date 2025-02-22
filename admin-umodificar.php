@@ -31,7 +31,7 @@
         table {
             background-color: white;
             margin: 20px auto;
-            width: 85%;
+            width: 95%;
         }
 
         th, td {
@@ -106,7 +106,7 @@
 
         #div1 {
             background-color: white;
-            width: 1200px;
+            width: 1100px;
             padding: 10px;
             margin: 0px auto;
             border-radius: 8px;
