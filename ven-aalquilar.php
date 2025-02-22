@@ -182,80 +182,58 @@
 
     <div class="message">
     <?php
-session_start(); // Iniciar la sesión
+    session_start(); // Iniciar la sesión
 
-// Lógica para verificar las credenciales del usuario (esto es solo un ejemplo básico)
-$username = $_POST['username'];
-$password = $_POST['password'];
-
-// Conectar a la base de datos
-$conn = mysqli_connect("localhost", "root", "rootroot", "concesionario");
-
-if (!$conn) {
-    die("Conexión fallida: " . mysqli_connect_error());
-}
-
-// Verificar si las credenciales son correctas (ajustar esta consulta según tu tabla de usuarios)
-$sql = "SELECT id_usuario FROM usuarios WHERE username = '$username' AND password = '$password'";
-$result = mysqli_query($conn, $sql);
-
-if (mysqli_num_rows($result) > 0) {
-    // Si el usuario existe, guarda su id en la sesión
-    $row = mysqli_fetch_assoc($result);
-    $_SESSION['id_usuario'] = $row['id_usuario']; // Guardamos el id del usuario en la sesión
-    header("Location: vendedor.php"); // Redirigir a la página de vendedor (o la página adecuada)
-} else {
-    echo "Credenciales incorrectas.";
-}
-
-mysqli_close($conn);
-
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Conectar con la base de datos
-    $servername = "localhost";
-    $username = "root";
-    $password = "rootroot";
-    $dbname = "concesionario";
-
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-
-    if (!$conn) {
-        die("Conexión fallida: " . mysqli_connect_error());
+    // Verificar si el usuario ha iniciado sesión
+    if (!isset($_SESSION['id_usuario'])) {
+        die("Debes iniciar sesión para acceder a esta página.");
     }
 
-    // Recoger los datos del formulario
-    $modelo = mysqli_real_escape_string($conn, $_POST['modelo']);
-    $marca = mysqli_real_escape_string($conn, $_POST['marca']);
-    $color = mysqli_real_escape_string($conn, $_POST['color']);
-    $precio = mysqli_real_escape_string($conn, $_POST['precio']);
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Conectar con la base de datos
+        $servername = "localhost";
+        $username = "root";
+        $password = "rootroot";
+        $dbname = "concesionario";
 
-    // Insertar coche en la tabla coches
-    $sql_insert = "INSERT INTO coches (modelo, marca, color, precio) VALUES ('$modelo', '$marca', '$color', '$precio')";
+        $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-    if (mysqli_query($conn, $sql_insert)) {
-        // Obtener el ID del coche recién insertado
-        $id_coche = mysqli_insert_id($conn);
-
-        // Insertar alquiler en la tabla alquileres
-        $hora_actual = date('Y-m-d H:i:s');
-        $id_usuario = $_SESSION['id_usuario']; // Aseguramos que el id del usuario está en la sesión
-
-        $sql_alquiler = "INSERT INTO alquileres (id_coche, id_usuario, prestado) VALUES ('$id_coche', '$id_usuario', '$hora_actual')";
-
-        if (mysqli_query($conn, $sql_alquiler)) {
-            echo "<p>Alquiler registrado correctamente.</p>";
-        } else {
-            echo "<p>Error al registrar el alquiler: " . mysqli_error($conn) . "</p>";
+        if (!$conn) {
+            die("Conexión fallida: " . mysqli_connect_error());
         }
-    } else {
-        echo "<p>Error al añadir el coche: " . mysqli_error($conn) . "</p>";
-    }
 
-    // Cerrar la conexión
-    mysqli_close($conn);
-}
-?>
+        // Recoger los datos del formulario
+        $modelo = mysqli_real_escape_string($conn, $_POST['modelo']);
+        $marca = mysqli_real_escape_string($conn, $_POST['marca']);
+        $color = mysqli_real_escape_string($conn, $_POST['color']);
+        $precio = mysqli_real_escape_string($conn, $_POST['precio']);
+
+        // Insertar coche en la tabla coches
+        $sql_insert = "INSERT INTO coches (modelo, marca, color, precio, alquilado) VALUES ('$modelo', '$marca', '$color', '$precio', 'Alquilado')";
+
+        if (mysqli_query($conn, $sql_insert)) {
+            // Obtener el ID del coche recién insertado
+            $id_coche = mysqli_insert_id($conn);
+
+            // Insertar alquiler en la tabla alquileres
+            $hora_actual = date('Y-m-d H:i:s');
+            $id_usuario = $_SESSION['id_usuario']; // Tomar el id_usuario de la sesión
+
+            $sql_alquiler = "INSERT INTO alquileres (id_coche, id_usuario, prestado) VALUES ('$id_coche', '$id_usuario', '$hora_actual')";
+
+            if (mysqli_query($conn, $sql_alquiler)) {
+                echo "<p>Alquiler registrado correctamente.</p>";
+            } else {
+                echo "<p>Error al registrar el alquiler: " . mysqli_error($conn) . "</p>";
+            }
+        } else {
+            echo "<p>Error al añadir el coche: " . mysqli_error($conn) . "</p>";
+        }
+
+        // Cerrar la conexión
+        mysqli_close($conn);
+    }
+    ?>
 
     </div>
 </body>

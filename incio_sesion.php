@@ -70,14 +70,18 @@
             text-align: center;
         }
 
-        h2 {padding-bottom: 11px;}
+        h2 {
+            padding-bottom: 11px;
+        }
     </style>
 </head>
 <body>
     <div id="titulo">
         <h1>CONCESIONARIO</h1>
     </div>
-
+    <form action="logout.php" method="post">
+        <button type="submit" class="logout-button">Cerrar sesión</button>
+    </form>
     <div id="div1">
         <h2>Iniciar Sesión</h2>
         <form id="loginForm" action="" method="post" onsubmit="return validateForm()">
@@ -100,7 +104,7 @@
         // Función para validar los campos del formulario
         function validateForm() {
             var usuario = document.getElementById('usuario').value;
-            var contrasena = document.getElementById('contraseña').value; // Cambié aquí para que coincida con el nombre del campo
+            var contrasena = document.getElementById('contraseña').value;
             var message = document.getElementById('message');
 
             // Verificar si los campos están vacíos
@@ -115,83 +119,55 @@
         }
     </script>
     <?php
-session_start(); // Iniciar la sesión al principio
+    session_start(); // Iniciar la sesión al principio
 
-// Datos de conexión a la base de datos
-$servername = "localhost";
-$username = "root";
-$password = "rootroot";
-$dbname = "concesionario";
+    // Datos de conexión a la base de datos
+    $servername = "localhost";
+    $username = "root";
+    $password = "rootroot";
+    $dbname = "concesionario";
 
-// Crear la conexión
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+    // Crear la conexión
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-// Verificar la conexión
-if (!$conn) {
-    die("<p style='text-align: center; color: white;'>Conexión fallida: " . mysqli_connect_error() . "</p>");
-}
+    // Verificar la conexión
+    if (!$conn) {
+        die("<p style='text-align: center; color: white;'>Conexión fallida: " . mysqli_connect_error() . "</p>");
+    }
 
-// Verificar si el formulario fue enviado
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $usuario = $_POST['usuario'];  // Nombre de usuario del formulario
-    $contrasena = $_POST['contraseña'];  // Contraseña del formulario
+    // Verificar si el formulario fue enviado
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $usuario = $_POST['usuario'];  // Nombre de usuario del formulario
+        $contrasena = $_POST['contraseña'];  // Contraseña del formulario
 
-    // Consulta para verificar si el usuario existe en la base de datos
-    $sql = "SELECT * FROM usuarios WHERE nombre_usuario = '$usuario'"; 
-    $result = mysqli_query($conn, $sql);
+        // Consulta para verificar si el usuario existe en la base de datos y es de tipo "Vendedor"
+        $sql = "SELECT * FROM usuarios WHERE nombre_usuario = '$usuario' AND tipo = 'Vendedor'";
+        $result = mysqli_query($conn, $sql);
 
-    // Verificar si el usuario existe
-    if (mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
+        // Verificar si el usuario existe y es de tipo "Vendedor"
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
 
-        // Guardar el id_usuario en la sesión
-        $_SESSION['id_usuario'] = $row['id_usuario']; // Aquí almacenamos el id_usuario en la sesión
-
-        // Si el tipo de usuario es "Administrador", verificamos la contraseña sin cifrar
-        if ($row['tipo'] == 'Administrador') {
-            if ($contrasena == $row['password']) {
-                // Iniciar sesión y guardar el tipo de usuario
-                $_SESSION['usuario'] = $usuario;
-                $_SESSION['tipo_usuario'] = $row['tipo'];  // Guardamos el tipo de usuario
-
-                // Redirigir al administrador
-                header("Location: admin-inicio.php");
-                exit();
-            } else {
-                echo "<p style='text-align: center; color: white;'>Contraseña incorrecta para Administrador.</p>";
-            }
-        } else {
-            // Si no es administrador, verificamos la contraseña cifrada usando password_verify()
+            // Verificar la contraseña cifrada usando password_verify()
             if (password_verify($contrasena, $row['password'])) {
-                // Iniciar sesión y guardar el tipo de usuario
+                // Iniciar sesión y guardar el id_usuario y tipo de usuario en la sesión
                 $_SESSION['usuario'] = $usuario;
-                $_SESSION['id_usuario'] = $row['id_usuario']; // Guardamos el id del usuario
-                $_SESSION['tipo_usuario'] = $row['tipo'];  // Guardamos el tipo de usuario
+                $_SESSION['id_usuario'] = $row['id_usuario'];
+                $_SESSION['tipo_usuario'] = $row['tipo'];
 
-                // Redirigir dependiendo del tipo de usuario
-                switch ($row['tipo']) {
-                    case 'Vendedor':
-                        header("Location: ven-vendedor.php"); // Redirige a la página de vendedor
-                        exit();
-                    case 'Comprador':
-                        header("Location: comp-comprador.php"); // Redirige a la página de comprador
-                        exit();
-                    default:
-                        echo "<p style='text-align: center; color: white;'>Tipo de usuario desconocido.</p>";
-                        break;
-                }
+                // Redirigir a la página de vendedor
+                header("Location: ven-vendedor.php");
+                exit();
             } else {
                 echo "<p style='text-align: center; color: white;'>Contraseña incorrecta.</p>";
             }
+        } else {
+            echo "<p style='text-align: center; color: white;'>Este usuario no es de tipo Vendedor o no está registrado.</p>";
         }
-    } else {
-        echo "<p style='text-align: center; color: white;'>Este usuario no está registrado en la base de datos del concesionario.</p>";
     }
-}
 
-// Cerrar la conexión
-mysqli_close($conn);
-?>
-
+    // Cerrar la conexión
+    mysqli_close($conn);
+    ?>
 </body>
 </html>

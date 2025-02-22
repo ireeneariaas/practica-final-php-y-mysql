@@ -121,7 +121,6 @@
             margin: 0px auto;
             border-radius: 8px;
         }
-
     </style>
 
     <div id="titulo">

@@ -83,12 +83,27 @@
             margin-top: 20px;
             font-size: 1.5em;
         }
+
+        .logout-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #f44336; /* Rojo */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div id="titulo">
         <h1>VENDEDOR</h1>
     </div>
+    <form action="cerrar_sesion.php" method="post">
+        <button type="submit" class="logout-button">Cerrar sesión</button>
+    </form>
     <div>
         <ul class="menu">
             <li><a href="">Alquileres</a>
