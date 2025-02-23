@@ -7,71 +7,18 @@
     <style>
         body {
             background-color: gray;
-            font-family: Arial, sans-serif;
-        }
-
-        #div1 {
-            background-color: white;
-            width: 300px;
-            padding: 20px;
-            padding-right: 40px;
-            margin: 50px auto;
-            border-radius: 8px;
-        }
-
-        label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-
-        #precio {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-        }
-
-        #color {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-        }
-
-        #modelo {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-        }
-
-        #marca {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-        }
-
-        button {
-            background-color: black;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .message {
-            margin-top: 10px;
-            text-align: center;
-            color: white;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial;
+            align: center;
             background-image: url("./concesionario.jpg");
             background-size: cover;
             background-position: center;
             height: 800px;
+            margin: 0;
+            font-family: Arial;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
         }
 
         #titulo {
@@ -85,7 +32,6 @@
             margin: 0;
             padding: 10px;
             text-align: center;
-            color: white;
         }
 
         ul {
@@ -136,24 +82,81 @@
             flex: none;
         }
 
-        #div2 {
+        .center {
             text-align: center;
+            margin-top: 20px;
+            color: white;
+        }
+
+        table {
+            margin: 0 auto;
+            background-color: white;
+            width: 95%;
+        }
+
+        table th, table td {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        button {
+            background-color: black;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #b0b0b0;
         }
 
         .logout-button {
             position: absolute;
             top: 10px;
             right: 10px;
+            background-color: black;
+            color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
 
+        #div1 {
+    background-color: white;
+    width: 300px;
+    padding: 20px;
+    padding-right: 40px;
+    margin: 50px auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra ligera para profundidad */
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold; /* Resaltar las etiquetas */
+}
+
+#modelo, #marca, #color, #precio {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px; /* Bordes redondeados en los campos de entrada */
+}
+
+.div2 {
+    text-align: center;
+    color:white;
+}
+
+
     </style>
 </head>
 <body>
-    <div id="titulo">
+<div id="titulo">
         <h1>VENDEDOR</h1>
         <form action="cerrar_sesion.php" method="post">
             <button type="submit" class="logout-button">Cerrar sesión</button>
@@ -171,7 +174,7 @@
         </ul>
     </div>
 
-    <h1>Alquilar tu coche</h1>
+    <h1>Alquilar tus coches</h1>
 
     <div id="div1">
         <h2>Crear un alquiler</h2>
@@ -188,66 +191,65 @@
             <label for="precio">Precio</label>
             <input type="number" id="precio" name="precio" required><br><br>
 
-            <div id="div2">
+            <div class="div2">
                 <br><button type="submit">Añadir</button>
             </div>
         </form>
     </div>
 
     <div class="message">
-    <?php
-    session_start(); // Iniciar la sesión
+<?php
+session_start();
 
-    // Verificar si el usuario ha iniciado sesión
-    if (!isset($_SESSION['id_usuario'])) {
-        die("Debes iniciar sesión para acceder a esta página.");
+// Obtener el id_usuario del usuario logueado
+$id_usuario = $_SESSION['id_usuario'];
+
+// Datos de conexión a la base de datos
+$servername = "localhost";  
+$username = "root";         
+$password = "rootroot";     
+$dbname = "concesionario";  
+
+// Crear la conexión
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+// Verificar la conexión
+if (!$conn) {
+    die("Conexión fallida: " . mysqli_connect_error());
+}
+
+// Recoger los datos del formulario
+$modelo = mysqli_real_escape_string($conn, $_POST['modelo']);
+$marca = mysqli_real_escape_string($conn, $_POST['marca']);
+$color = mysqli_real_escape_string($conn, $_POST['color']);
+$precio = mysqli_real_escape_string($conn, $_POST['precio']);
+
+// Insertar coche en la tabla coches con el usuario que lo está registrando
+$sql_insert = "INSERT INTO coches (modelo, marca, color, precio, alquilado, id_usuario) 
+               VALUES ('$modelo', '$marca', '$color', '$precio', 'No alquilado', '$id_usuario')";
+
+if (mysqli_query($conn, $sql_insert)) {
+    // Obtener el ID del coche recién insertado
+    $id_coche = mysqli_insert_id($conn);
+
+    // Insertar alquiler en la tabla alquileres
+    $hora_actual = date('Y-m-d H:i:s');
+    $sql_alquiler = "INSERT INTO alquileres (id_coche, id_usuario, prestado) 
+                     VALUES ('$id_coche', '$id_usuario', '$hora_actual')";
+
+    echo "<div class='div2'>";
+    if (mysqli_query($conn, $sql_alquiler)) {
+        echo "<p>Alquiler registrado correctamente.</p>";
+    } else {
+        echo "<p>Error al registrar el alquiler: " . mysqli_error($conn) . "</p>";
     }
+    echo "</div>";
+}
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Conectar con la base de datos
-        $servername = "localhost";
-        $username = "root";
-        $password = "rootroot";
-        $dbname = "concesionario";
+// Cerrar conexión
+mysqli_close($conn);
+?>
 
-        $conn = mysqli_connect($servername, $username, $password, $dbname);
-
-        if (!$conn) {
-            die("Conexión fallida: " . mysqli_connect_error());
-        }
-
-        // Recoger los datos del formulario
-        $modelo = mysqli_real_escape_string($conn, $_POST['modelo']);
-        $marca = mysqli_real_escape_string($conn, $_POST['marca']);
-        $color = mysqli_real_escape_string($conn, $_POST['color']);
-        $precio = mysqli_real_escape_string($conn, $_POST['precio']);
-
-        // Insertar coche en la tabla coches
-        $sql_insert = "INSERT INTO coches (modelo, marca, color, precio, alquilado) VALUES ('$modelo', '$marca', '$color', '$precio', 'Alquilado')";
-
-        if (mysqli_query($conn, $sql_insert)) {
-            // Obtener el ID del coche recién insertado
-            $id_coche = mysqli_insert_id($conn);
-
-            // Insertar alquiler en la tabla alquileres
-            $hora_actual = date('Y-m-d H:i:s');
-            $id_usuario = $_SESSION['id_usuario']; // Tomar el id_usuario de la sesión
-
-            $sql_alquiler = "INSERT INTO alquileres (id_coche, id_usuario, prestado) VALUES ('$id_coche', '$id_usuario', '$hora_actual')";
-
-            if (mysqli_query($conn, $sql_alquiler)) {
-                echo "<p>Alquiler registrado correctamente.</p>";
-            } else {
-                echo "<p>Error al registrar el alquiler: " . mysqli_error($conn) . "</p>";
-            }
-        } else {
-            echo "<p>Error al añadir el coche: " . mysqli_error($conn) . "</p>";
-        }
-
-        // Cerrar la conexión
-        mysqli_close($conn);
-    }
-    ?>
 
     </div>
 </body>
