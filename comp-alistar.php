@@ -20,7 +20,7 @@
         background-color: white;
         width: 60%;
         text-align: center;
-        margin: 0 auto; /* Esto centra la tabla */
+        margin: 0 auto;
     }
 
     h1 {
@@ -40,69 +40,81 @@
         text-align: center;
     }
 
-    /* Estilos generales para el menú */
-    ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    li {
-        position: relative;
-    }
-
-    ul ul {
-        display: none;
-        position: absolute;
-        left: 0;
-        background: #f9f9f9;
-        padding: 0;
-        border: 1px solid #ccc;
-    }
-
-    li:hover > ul {
-        display: block;
-    }
-
-    a {
-        text-decoration: none;
-        padding: 10px 15px;
-        display: block;
-        color: #333;
-        white-space: nowrap;
-    }
-
-    a:hover {
-        background: #ddd;
-    }
-
-    /* Menú principal en horizontal */
     .menu {
-        display: flex;
-        justify-content: center; /* Centra el menú horizontalmente */
-        background: #f1f1f1;
-        border: 1px solid #ccc;
-        margin: 0;
-        padding: 0;
-    }
-
-    .menu > li {
-        flex: none;
-    }
-
-    .logout-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: black; /* Color negro */
-    color: white; /* Texto en blanco */
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    background: #f1f1f1;
+    border: 1px solid #ccc;
+    margin: 0;
+    padding: 0;
 }
 
-</style>
+.menu > li {
+    flex: none;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    position: relative;
+}
+
+ul ul {
+    display: none;
+    position: absolute;
+    left: 0;
+    background: #f9f9f9;
+    padding: 0;
+    border: 1px solid #ccc;
+}
+
+li:hover > ul {
+    display: block;
+}
+
+a {
+    text-decoration: none;
+    padding: 10px 15px;
+    display: block;
+    color: #333;
+    white-space: nowrap;
+}
+
+a:hover {
+    background: #ddd;
+}
+
+    .logout-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: black;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .devolver-button {
+        display: block;
+        margin: 20px auto;
+        background-color: black;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .devolver-button:hover {
+        background-color: darkgray;
+    }
+    </style>
 </head>
 <body>
     <div id="titulo">
@@ -128,63 +140,88 @@
         </ul>
     </div>
     <h1>Listado de Alquileres</h1>
-    <table border=1>
-        <tr>
-            <th>ID Alquiler</th>
-            <th>ID Usuario</th>
-            <th>ID Coche</th>
-            <th>Fecha Prestado</th>
-            <th>Fecha Devuelto</th>
-        </tr>
-        <?php
-        // Iniciar la sesión para obtener el id_usuario del usuario logueado
-        session_start();
-        var_dump($_SESSION); // Verifica el contenido de la sesión
-        
+    <form method="POST" action="">
+        <table border=1>
+            <tr>
+                <th>Seleccionar</th>
+                <th>ID Alquiler</th>
+                <th>ID Usuario</th>
+                <th>ID Coche</th>
+                <th>Fecha Prestado</th>
+                <th>Fecha Devuelto</th>
+            </tr>
+            <?php
+            session_start();
+            $id_usuario = $_SESSION['id_usuario'];
+            $servername = "localhost";
+            $username = "root";
+            $password = "rootroot";
+            $dbname = "concesionario";
 
-        // Obtener el id_usuario del usuario logueado
-        $id_usuario = $_SESSION['id_usuario'];
+            $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-        // Datos de conexión a la base de datos
-        $servername = "localhost";  // Cambia esto si el servidor es diferente
-        $username = "root";         // Usuario de MySQL
-        $password = "rootroot";     // Contraseña de MySQL (cambia esto si es diferente)
-        $dbname = "concesionario";  // Nombre de la base de datos existente
-
-        // Crear la conexión
-        $conn = mysqli_connect($servername, $username, $password, $dbname);
-
-        // Verificar la conexión
-        if (!$conn) {
-            die("Conexión fallida: " . mysqli_connect_error());
-        }
-
-        // Consulta para obtener los alquileres realizados por el usuario logueado
-        $sql = "SELECT * FROM alquileres WHERE id_usuario = '$id_usuario'";
-
-        // Ejecutar la consulta
-        $result = mysqli_query($conn, $sql);
-
-        // Verificar si hay resultados
-        if (mysqli_num_rows($result) > 0) {
-            // Mostrar cada fila de datos en la tabla
-            while ($row = mysqli_fetch_assoc($result)) {
-                echo "<tr>";
-                echo "<td>" . $row["id_alquiler"] . "</td>"; // Mostrar ID Alquiler
-                echo "<td>" . $row["id_usuario"] . "</td>"; // Mostrar ID Usuario
-                echo "<td>" . $row["id_coche"] . "</td>"; // Mostrar ID Coche
-                echo "<td>" . $row["prestado"] . "</td>"; // Mostrar Fecha Prestado
-                echo "<td>" . $row["devuelto"] . "</td>"; // Mostrar Fecha Devuelto
-                echo "</tr>";
+            if (!$conn) {
+                die("Conexión fallida: " . mysqli_connect_error());
             }
-        } else {
-            echo "<tr><td colspan='5'>No tienes alquileres en este momento.</td></tr>";
-        }
 
-        // Cerrar la conexión
-        mysqli_close($conn);
-        ?>
-    </table>
+            // Consulta para obtener los alquileres del usuario
+            $sql = "SELECT * FROM alquileres WHERE id_usuario = '$id_usuario' AND devuelto IS NULL";  // Alquileres activos
 
+            $result = mysqli_query($conn, $sql);
+
+            if (mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<tr>";
+                    echo "<td><input type='checkbox' name='devolver_ids[]' value='" . $row["id_alquiler"] . "'></td>";
+                    echo "<td>" . $row["id_alquiler"] . "</td>";
+                    echo "<td>" . $row["id_usuario"] . "</td>";
+                    echo "<td>" . $row["id_coche"] . "</td>";
+                    echo "<td>" . $row["prestado"] . "</td>";
+                    echo "<td>" . ($row["devuelto"] ? $row["devuelto"] : 'No devuelto') . "</td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='6'>No tienes alquileres en este momento.</td></tr>";
+            }
+
+            // Procesar la devolución de coches seleccionados
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['devolver_ids'])) {
+    $devolver_ids = $_POST['devolver_ids'];
+    $fecha_devuelto = date('Y-m-d H:i:s'); // Fecha y hora actual
+
+    foreach ($devolver_ids as $id_alquiler) {
+        // Obtener el id_coche para actualizar su estado
+        $sql_coche = "SELECT id_coche FROM alquileres WHERE id_alquiler = '$id_alquiler'";
+        $result_coche = mysqli_query($conn, $sql_coche);
+        $row_coche = mysqli_fetch_assoc($result_coche);
+        $id_coche = $row_coche["id_coche"];
+
+        // Mover el alquiler a la tabla de devoluciones sin eliminar
+        $sql_devolucion = "INSERT INTO devoluciones (id_alquiler, id_usuario, id_coche, prestado, devuelto)
+                           SELECT id_alquiler, id_usuario, id_coche, prestado, '$fecha_devuelto' FROM alquileres WHERE id_alquiler = '$id_alquiler'";
+        mysqli_query($conn, $sql_devolucion);
+
+        // Eliminar el coche de la tabla de alquileres (pero no de devoluciones)
+        $sql_update_alquiler = "UPDATE alquileres SET devuelto = '$fecha_devuelto' WHERE id_alquiler = '$id_alquiler'";
+        mysqli_query($conn, $sql_update_alquiler);
+
+        // Cambiar el estado del coche a "no alquilado"
+        $update_coches_sql = "UPDATE coches SET alquilado = 'no alquilado', id_usuario = NULL WHERE id_coche = '$id_coche'";
+        mysqli_query($conn, $update_coches_sql);
+    }
+
+    // Recargar la página para reflejar los cambios
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+
+            mysqli_close($conn);
+            ?>
+        </table>
+
+        <!-- Botón para devolver los coches seleccionados -->
+        <button type="submit" class="devolver-button">Devolver coches seleccionados</button>
+    </form>
 </body>
 </html>

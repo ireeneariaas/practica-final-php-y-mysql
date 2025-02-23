@@ -113,7 +113,7 @@
 
         #div1 {
             background-color: white;
-            width:600px;
+            width:1000px;
             padding: 20px;
             margin: 0px auto;
             border-radius: 8px;
@@ -160,93 +160,94 @@
 
     <div class="message">
     <?php
-session_start();
-var_dump($_SESSION); // Verifica el contenido de la sesión
+        session_start();
+        
+        // Obtener el id_usuario del usuario logueado
+        $id_usuario = $_SESSION['id_usuario'];
 
-// Obtener el id_usuario del usuario logueado
-$id_usuario = $_SESSION['id_usuario'];
+        // Datos de conexión a la base de datos
+        $servername = "localhost";  
+        $username = "root";         
+        $password = "rootroot";     
+        $dbname = "concesionario";  
 
-// Datos de conexión a la base de datos
-$servername = "localhost";  
-$username = "root";         
-$password = "rootroot";     
-$dbname = "concesionario";  
+        // Crear la conexión
+        $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-// Crear la conexión
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-
-// Verificar la conexión
-if (!$conn) {
-    die("Conexión fallida: " . mysqli_connect_error());
-}
-
-// Consulta para obtener los coches no alquilados
-$sql = "SELECT id_coche, modelo, marca, color, precio, alquilado FROM coches WHERE alquilado='no alquilado'";
-$stmt = mysqli_prepare($conn, $sql);
-mysqli_stmt_execute($stmt);
-$result_coches = mysqli_stmt_get_result($stmt);
-
-if ($result_coches && mysqli_num_rows($result_coches) > 0) {
-    echo "<form action='' method='POST'>";
-    echo "<table border='1'>
-            <tr>
-                <th>Seleccionar</th>
-                <th>Modelo</th>
-                <th>Marca</th>
-                <th>Color</th>
-                <th>Precio</th>
-                <th>Alquilado</th>
-            </tr>";
-
-    while ($row = mysqli_fetch_assoc($result_coches)) {
-        echo "<tr>";
-        echo "<td><input type='checkbox' name='alquilar_ids[]' value='" . $row['id_coche'] . "'></td>";
-        echo "<td>" . htmlspecialchars($row['modelo']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['marca']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['color']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['precio']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['alquilado']) . "</td>";
-        echo "</tr>";
-    }
-
-    echo "</table>";
-    echo "<div class='center'><button type='submit'>Alquilar</button></div>";
-    echo "</form>";
-} else {
-    echo "<div class='center'><h2>No hay coches disponibles</h2></div>";
-}
-
-// Procesar alquiler de coches seleccionados
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['alquilar_ids'])) {
-    $alquilar_ids = $_POST['alquilar_ids'];
-
-    foreach ($alquilar_ids as $id_coche) {
-        // Insertar en la tabla alquileres con una fecha actual
-        $prestado = date('Y-m-d H:i:s');
-        $insert_sql = "INSERT INTO alquileres (id_usuario, id_coche, prestado) VALUES (?, ?, ?)";
-        $stmt_insert = mysqli_prepare($conn, $insert_sql);
-        mysqli_stmt_bind_param($stmt_insert, "iis", $id_usuario, $id_coche, $prestado);
-
-        if (mysqli_stmt_execute($stmt_insert)) {
-            // Actualizar el coche como alquilado y asociar el id_usuario en la tabla coches
-            $update_sql = "UPDATE coches SET alquilado='alquilado', id_usuario=? WHERE id_coche=?";
-            $stmt_update = mysqli_prepare($conn, $update_sql);
-            mysqli_stmt_bind_param($stmt_update, "ii", $id_usuario, $id_coche);
-
-            if (mysqli_stmt_execute($stmt_update)) {
-                echo "<div class='center'><p>El coche con ID $id_coche ha sido alquilado correctamente.</p></div>";
-            } else {
-                echo "<div class='center'><p>Error al actualizar el estado del coche con ID $id_coche.</p></div>";
-            }
-        } else {
-            echo "<div class='center'><p>Error al registrar el alquiler del coche con ID $id_coche.</p></div>";
+        // Verificar la conexión
+        if (!$conn) {
+            die("Conexión fallida: " . mysqli_connect_error());
         }
-    }
-}
 
-// Cerrar conexión
-mysqli_close($conn);
-?>
+        // Consulta para obtener los coches no alquilados
+        $sql = "SELECT id_coche, modelo, marca, color, precio, alquilado FROM coches WHERE alquilado='no alquilado'";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_execute($stmt);
+        $result_coches = mysqli_stmt_get_result($stmt);
+
+        if ($result_coches && mysqli_num_rows($result_coches) > 0) {
+            echo "<div id='div1'>";
+            echo "<form action='' method='POST'>";
+            echo "<table border='1'>
+                    <tr>
+                        <th>Seleccionar</th>
+                        <th>Modelo</th>
+                        <th>Marca</th>
+                        <th>Color</th>
+                        <th>Precio</th>
+                        <th>Alquilado</th>
+                    </tr>";
+
+            while ($row = mysqli_fetch_assoc($result_coches)) {
+                echo "<tr>";
+                echo "<td><input type='checkbox' name='alquilar_ids[]' value='" . $row['id_coche'] . "'></td>";
+                echo "<td>" . htmlspecialchars($row['modelo']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['marca']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['color']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['precio']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['alquilado']) . "</td>";
+                echo "</tr>";
+            }
+
+            echo "</table>";
+            echo "<div class='center'><button type='submit'>Alquilar</button></div>";
+            echo "</form>";
+            echo "</div>";
+        } else {
+            echo "<div class='center'><h2>No hay coches disponibles</h2></div>";
+        }
+
+        // Procesar alquiler de coches seleccionados
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['alquilar_ids'])) {
+            $alquilar_ids = $_POST['alquilar_ids'];
+
+            foreach ($alquilar_ids as $id_coche) {
+                // Insertar en la tabla alquileres con una fecha actual
+                $prestado = date('Y-m-d H:i:s');
+                $insert_sql = "INSERT INTO alquileres (id_usuario, id_coche, prestado) VALUES (?, ?, ?)";
+                $stmt_insert = mysqli_prepare($conn, $insert_sql);
+                mysqli_stmt_bind_param($stmt_insert, "iis", $id_usuario, $id_coche, $prestado);
+
+                if (mysqli_stmt_execute($stmt_insert)) {
+                    // Actualizar el coche como alquilado y asociar el id_usuario en la tabla coches
+                    $update_sql = "UPDATE coches SET alquilado='alquilado', id_usuario=? WHERE id_coche=?";
+                    $stmt_update = mysqli_prepare($conn, $update_sql);
+                    mysqli_stmt_bind_param($stmt_update, "ii", $id_usuario, $id_coche);
+
+                    if (mysqli_stmt_execute($stmt_update)) {
+                        echo "<div class='center'><p>El coche con ID $id_coche ha sido alquilado correctamente.</p></div>";
+                    } else {
+                        echo "<div class='center'><p>Error al actualizar el estado del coche con ID $id_coche.</p></div>";
+                    }
+                } else {
+                    echo "<div class='center'><p>Error al registrar el alquiler del coche con ID $id_coche.</p></div>";
+                }
+            }
+        }
+
+        // Cerrar conexión
+        mysqli_close($conn);
+    ?>
 
     </div>
 </body>
