@@ -114,81 +114,104 @@
             return true; // Permite que el formulario se envíe
         }
     </script>
+<?php
+session_start();
+ob_start(); // Previene errores de salida antes de header()
 
-    <?php
-        session_start(); // Iniciar la sesión al principio
+// Verificar si la sesión está funcionando correctamente
+var_dump($_SESSION); // Muestra los datos almacenados en la sesión
+echo "<br>";
 
-        // Datos de conexión a la base de datos
-        $servername = "localhost";
-        $username = "root";
-        $password = "rootroot";
-        $dbname = "concesionario";
+if (empty(session_save_path())) {
+    echo "<p style='color: red;'>Error: session.save_path no está configurado correctamente.</p>";
+} else {
+    echo "<p>Ruta de sesión: " . session_save_path() . "</p>";
+}
 
-        // Crear la conexión
-        $conn = mysqli_connect($servername, $username, $password, $dbname);
+// Datos de conexión a la base de datos
+$servername = "localhost";
+$username = "root";
+$password = "rootroot";
+$dbname = "concesionario";
 
-        // Verificar la conexión
-        if (!$conn) {
-            die("<p style='text-align: center; color: white;'>Conexión fallida: " . mysqli_connect_error() . "</p>");
-        }
+// Crear la conexión
+$conn = mysqli_connect($servername, $username, $password, $dbname);
 
-        // Verificar si el formulario fue enviado
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $usuario = $_POST['usuario'];  // Nombre de usuario del formulario
-            $contrasena = $_POST['contraseña'];  // Contraseña del formulario
+// Verificar la conexión
+if (!$conn) {
+    die("<p style='text-align: center; color: white;'>Conexión fallida: " . mysqli_connect_error() . "</p>");
+}
 
-            // Consulta para verificar si el usuario existe en la base de datos
-            $sql = "SELECT * FROM usuarios WHERE nombre_usuario = '$usuario'"; 
-            $result = mysqli_query($conn, $sql);
 
-            // Verificar si el usuario existe
-            if (mysqli_num_rows($result) > 0) {
-                $row = mysqli_fetch_assoc($result);
+// Verificar si el formulario fue enviado
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $usuario = $_POST['usuario'];  // Nombre de usuario del formulario
+    $contrasena = $_POST['contraseña'];  // Contraseña del formulario
 
-                // Si el tipo de usuario es "Administrador", verificamos la contraseña sin cifrar
-                if ($row['tipo'] == 'Administrador') {
-                    if ($contrasena == $row['password']) {
-                        // Iniciar sesión y guardar el tipo de usuario
-                        $_SESSION['usuario'] = $usuario;
-                        $_SESSION['tipo_usuario'] = $row['tipo'];  // Guardamos el tipo de usuario
+    // Consulta para verificar si el usuario existe en la base de datos
+    $sql = "SELECT * FROM usuarios WHERE nombre_usuario = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "s", $usuario);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-                        // Redirigir al administrador
-                        header("Location: admin-inicio.php");
+    // Verificar si el usuario existe
+    if ($row = mysqli_fetch_assoc($result)) {
+        if ($row['tipo'] == 'Administrador') {
+            if ($contrasena == $row['password']) {
+                $_SESSION['id_usuario'] = $row['id_usuario'];
+                $_SESSION['usuario'] = $usuario;
+                $_SESSION['tipo_usuario'] = $row['tipo'];
+
+                // Verificar si la sesión está correctamente almacenada antes de redirigir
+                if (!isset($_SESSION['id_usuario'])) {
+                    echo "<p style='color: red;'>Error: No se guardó el ID de usuario en la sesión.</p>";
+                    exit();
+                }
+
+                header("Location: admin-inicio.php");
+                exit();
+            } else {
+                echo "<p style='text-align: center; color: white;'>Contraseña incorrecta para Administrador.</p>";
+            }
+        } else {
+            if (password_verify($contrasena, $row['password'])) {
+                $_SESSION['id_usuario'] = $row['id_usuario'];
+                $_SESSION['usuario'] = $usuario;
+                $_SESSION['tipo_usuario'] = $row['tipo'];
+
+                // Verificar si la sesión está correctamente almacenada antes de redirigir
+                if (!isset($_SESSION['id_usuario'])) {
+                    echo "<p style='color: red;'>Error: No se guardó el ID de usuario en la sesión.</p>";
+                    exit();
+                }
+
+                switch ($row['tipo']) {
+                    case 'Vendedor':
+                        header("Location: ven-vendedor.php");
                         exit();
-                    } else {
-                        echo "<p style='text-align: center; color: white;'>Contraseña incorrecta para Administrador.</p>";
-                    }
-                } else {
-                    // Si no es administrador, verificamos la contraseña cifrada usando password_verify()
-                    if (password_verify($contrasena, $row['password'])) {
-                        // Iniciar sesión y guardar el tipo de usuario
-                        $_SESSION['usuario'] = $usuario;
-                        $_SESSION['tipo_usuario'] = $row['tipo'];  // Guardamos el tipo de usuario
-
-                        // Redirigir dependiendo del tipo de usuario
-                        switch ($row['tipo']) {
-                            case 'Vendedor':
-                                header("Location: ven-vendedor.php"); // Redirige a la página de vendedor
-                                exit();
-                            case 'Comprador':
-                                header("Location: comp-comprador.php"); // Redirige a la página de comprador
-                                exit();
-                            default:
-                                echo "<p style='text-align: center; color: white;'>Tipo de usuario desconocido.</p>";
-                                break;
-                        }
-                    } else {
-                        echo "<p style='text-align: center; color: white;'>Contraseña incorrecta.</p>";
-                    }
+                    case 'Comprador':
+                        header("Location: comp-comprador.php");
+                        exit();
+                    default:
+                        echo "<p style='text-align: center; color: white;'>Tipo de usuario desconocido.</p>";
+                        break;
                 }
             } else {
-                echo "<p style='text-align: center; color: white;'>Este usuario no está registrado en la base de datos del concesionario.</p>";
+                echo "<p style='text-align: center; color: white;'>Contraseña incorrecta.</p>";
             }
         }
+    } else {
+        echo "<p style='text-align: center; color: white;'>Este usuario no está registrado en la base de datos del concesionario.</p>";
+    }
 
-        // Cerrar la conexión
-        mysqli_close($conn);
-    ?>
+    mysqli_stmt_close($stmt);
+}
+
+// Cerrar la conexión
+mysqli_close($conn);
+?>
+
 
 </body>
 </html>

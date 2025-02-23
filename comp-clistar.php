@@ -20,7 +20,6 @@
             width: 60%;
             text-align: center;
             align-items: center;
-            border-collapse: collapse;
             margin: 0 auto; /* Esto centra la tabla */
         }
 
@@ -130,7 +129,7 @@
             </li>
         </ul>
     </div>
-    <h1>Listado de Coches</h1>
+    <h1>Listado de Coches disponibles</h1>
     <table border=1>
         <tr>
             <th>ID</th>
@@ -156,11 +155,7 @@
     }
 
     // Consulta mejorada
-    $sql = "SELECT c.id_coche, c.modelo, c.marca, c.color, c.precio, a.id_usuario 
-            FROM coches c
-            INNER JOIN alquileres a ON c.id_coche = a.id_coche
-            INNER JOIN usuarios u ON a.id_usuario = u.id_usuario
-            WHERE u.tipo = 'comprador'";
+    $sql = "SELECT * from coches where alquilado='no alquilado'";
 
     $result = mysqli_query($conn, $sql);
 
@@ -173,11 +168,11 @@
             echo "<td>" . $row["marca"] . "</td>";
             echo "<td>" . $row["color"] . "</td>";
             echo "<td>" . $row["precio"] . "</td>";
-            echo "<td>Sí</td>"; // Alquilado siempre será "Sí" porque viene de la tabla alquileres
+            echo "<td>No</td>"; // Alquilado siempre será "Sí" porque viene de la tabla alquileres
             echo "</tr>";
         }
     } else {
-        echo "<tr><td colspan='6'>No hay coches alquilados por compradores.</td></tr>";
+        echo "<tr><td colspan='6'>No hay coches disponibles.</td></tr>";
     }
 
     // Cerrar la conexión

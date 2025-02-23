@@ -136,7 +136,15 @@
             <th>Fecha Prestado</th>
             <th>Fecha Devuelto</th>
         </tr>
-    <?php
+        <?php
+        // Iniciar la sesión para obtener el id_usuario del usuario logueado
+        session_start();
+        var_dump($_SESSION); // Verifica el contenido de la sesión
+        
+
+        // Obtener el id_usuario del usuario logueado
+        $id_usuario = $_SESSION['id_usuario'];
+
         // Datos de conexión a la base de datos
         $servername = "localhost";  // Cambia esto si el servidor es diferente
         $username = "root";         // Usuario de MySQL
@@ -151,8 +159,10 @@
             die("Conexión fallida: " . mysqli_connect_error());
         }
 
-        // Consulta para obtener todos los alquileres
-        $sql = "SELECT * FROM alquileres";
+        // Consulta para obtener los alquileres realizados por el usuario logueado
+        $sql = "SELECT * FROM alquileres WHERE id_usuario = '$id_usuario'";
+
+        // Ejecutar la consulta
         $result = mysqli_query($conn, $sql);
 
         // Verificar si hay resultados
@@ -168,12 +178,12 @@
                 echo "</tr>";
             }
         } else {
-            echo "<tr><td colspan='5'>No se encontraron alquileres en la base de datos.</td></tr>";
+            echo "<tr><td colspan='5'>No tienes alquileres en este momento.</td></tr>";
         }
 
         // Cerrar la conexión
         mysqli_close($conn);
-    ?>
+        ?>
     </table>
 
 </body>

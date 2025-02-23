@@ -162,7 +162,7 @@
     <p color="black" align="justify">Se puede buscar por cualquier rasgo del coche, es decir, por su modelo, marca, color, precio o por si esta alquilado</p>
     <div class="search-box">
         <form action="" method="get">
-            <input type="text" name="buscar" placeholder="Buscar coche por modelo, marca, color, precio o alquilado..." value="<?php echo isset($_GET['buscar']) ? $_GET['buscar'] : ''; ?>" required>
+            <input type="text" name="buscar" placeholder="Buscar coche por modelo, marca, color o precio ..." value="<?php echo isset($_GET['buscar']) ? $_GET['buscar'] : ''; ?>" required>
             <button type="submit">Buscar</button><br><br>
         </form>
     </div>
@@ -179,66 +179,56 @@
         </tr>
         
         <?php
-    // Datos de conexión
-    $servername = "localhost";
-    $username = "root";
-    $password = "rootroot";
-    $dbname = "concesionario";
+            // Datos de conexión
+            $servername = "localhost";
+            $username = "root";
+            $password = "rootroot";
+            $dbname = "concesionario";
 
-    // Iniciar sesión (para obtener el ID del usuario logueado)
-    session_start();
+            // Crear la conexión
+            $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-    // Crear la conexión
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
+            // Verificar la conexión
+            if (!$conn) {
+                die("Conexión fallida: " . mysqli_connect_error());
+            }
 
-    // Verificar la conexión
-    if (!$conn) {
-        die("Conexión fallida: " . mysqli_connect_error());
-    }
+            // Verificar si hay una búsqueda
+            if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
+                $buscar = mysqli_real_escape_string($conn, $_GET['buscar']);
+                // Agregar condiciones dinámicas a la consulta
+                $sql = "SELECT * FROM coches WHERE 
+                        (modelo LIKE '%$buscar%' OR 
+                        marca LIKE '%$buscar%' OR 
+                        color LIKE '%$buscar%' OR 
+                        precio LIKE '%$buscar%') AND alquilado = 'No alquilado'";
+            } else {
+                // Si no hay búsqueda, muestra solo los coches no alquilados
+                $sql = "SELECT * FROM coches WHERE alquilado = 'No alquilado'";
+            }
 
-    // Verificar si hay una búsqueda
-    if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
-        $buscar = mysqli_real_escape_string($conn, $_GET['buscar']);
-        // Consulta usando JOIN implícito
-        $sql = "SELECT coches.* 
-                FROM coches, alquileres 
-                WHERE coches.id_coche = alquileres.id_coche
-                AND alquileres.devuelto IS NULL
-                AND (coches.modelo LIKE '%$buscar%'
-                OR coches.marca LIKE '%$buscar%'
-                OR coches.color LIKE '%$buscar%'
-                OR coches.precio LIKE '%$buscar%')";
-    } else {
-        // Consulta para obtener los coches alquilados por cualquier usuario y que no han sido devueltos
-        $sql = "SELECT coches.* 
-                FROM coches, alquileres 
-                WHERE coches.id_coche = alquileres.id_coche
-                AND alquileres.devuelto IS NULL";
-    }
+            // Ejecutar la consulta
+            $result = mysqli_query($conn, $sql);
 
-    // Ejecutar la consulta
-    $result = mysqli_query($conn, $sql);
+            // Mostrar los resultados
+            if (mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<tr>";
+                    echo "<td>" . $row["id_coche"] . "</td>";
+                    echo "<td>" . $row["modelo"] . "</td>";
+                    echo "<td>" . $row["marca"] . "</td>";
+                    echo "<td>" . $row["color"] . "</td>";
+                    echo "<td>" . $row["precio"] . "</td>";
+                    echo "<td>" . $row["alquilado"] . "</td>";  // Mostrar estado de alquiler
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='6'>No se encontraron coches con los criterios de búsqueda.</td></tr>";
+            }
 
-    // Mostrar los resultados
-    if (mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            echo "<tr>";
-            echo "<td>" . $row["id_coche"] . "</td>";
-            echo "<td>" . $row["modelo"] . "</td>";
-            echo "<td>" . $row["marca"] . "</td>";
-            echo "<td>" . $row["color"] . "</td>";
-            echo "<td>" . $row["precio"] . "</td>";
-            echo "<td>Sí</td>";  // Solo mostramos coches alquilados
-            echo "</tr>";
-        }
-    } else {
-        echo "<tr><td colspan='6'>No se encontraron coches alquilados.</td></tr>";
-    }
-
-    // Cerrar la conexión
-    mysqli_close($conn);
-?>
-
+            // Cerrar la conexión
+            mysqli_close($conn);
+        ?>
     </table>
     </div>
 

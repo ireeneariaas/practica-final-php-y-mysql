@@ -143,7 +143,7 @@
             <input type="radio" id="comprador" name="tipo" value="Comprador">Comprador<br>
             <div id="div2">
                 <button type="submit">Registrar</button><br>
-                <p> Una vez registrado, ya podras <a href='./incio_sesion.php'><b>iniciar sesión</b></a></p>
+                <p> Una vez registrado, ya podras <a href='./inicio_sesion.php'><b>iniciar sesión</b></a></p>
             </div>
         </form>
     </div>

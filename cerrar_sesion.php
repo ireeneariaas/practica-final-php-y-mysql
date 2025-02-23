@@ -56,7 +56,7 @@
         session_start(); // Iniciar la sesión
 
         $nombre_usuario = $_SESSION['usuario']; // Obtener el nombre de usuario
-        echo "<h2>Has cerrado sesion en tu cuenta.</h2><br>";
+        echo "<div id='div3'><h2>Has cerrado sesion en tu cuenta.</h2><br>";
         echo "<h3>Hasta pronto, $nombre_usuario</h3><br><br>";
 
         // Destruir la sesión
@@ -64,6 +64,7 @@
         ?>
         <p>Para volver a iniciar sesión, <a href="./inicio_sesion.php" class="azul">pulsa aquí</a>.</p>
         <a href="./clistar_sin_inicio.php" class="azul"><br><br>Continuar sin iniciar sesión</a>
+        </div>
     </div>
 </body>
 </html>
