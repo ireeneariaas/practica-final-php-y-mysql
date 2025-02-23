@@ -136,7 +136,7 @@
 </head>
 <body>
     <div id="titulo">
-        <h1>COMRPADOR</h1>
+        <h1>COMPRADOR</h1>
         <form action="cerrar_sesion.php" method="post">
             <button type="submit" class="logout-button">Cerrar sesión</button>
         </form>

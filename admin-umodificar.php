@@ -129,7 +129,7 @@
 <body>
 
 <div id="titulo">
-    <h1>USUARIOS</h1>
+    <h1>ADMINISTRADOR</h1>
         <form action="cerrar_sesion.php" method="post">
             <button type="submit" class="logout-button">Cerrar sesión</button>
         </form>

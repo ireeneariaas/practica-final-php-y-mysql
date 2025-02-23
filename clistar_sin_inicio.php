@@ -37,7 +37,7 @@
 </head>
 <body>
     <div id="titulo">
-        <h1>COCHES</h1>
+        <h1>COHES</h1>
     </div>
     <h1>Listado de Coches</h1>
     <table border=1 style="margin: auto;">

@@ -111,6 +111,19 @@
         .logout-button:hover {
             background-color: #333; /* Color más oscuro al pasar el ratón */
         }
+
+        #div3 {
+            background-color: white;
+            margin: 100px;
+            padding: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 700px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+
     </style>
 </head>
 <body>
@@ -130,64 +143,11 @@
             </li>
         </ul>
     </div>
-    <h1>Listar alquileres realizados</h1>
-    <table border="1">
-        <tr>
-            <th>ID Coche</th>
-            <th>Modelo</th>
-            <th>Marca</th>
-            <th>Color</th>
-            <th>Precio</th>
-            <th>Alquilado</th>
-        </tr>
-        <?php
-        // Iniciar sesión
-        session_start();
+    <?php
+        session_start(); // Iniciar la sesión
 
-        // Obtener el ID del usuario logueado
-        $id_usuario = $_SESSION['id_usuario'];
-
-        // Datos de conexión
-        $servername = "localhost";
-        $username = "root";
-        $password = "rootroot";
-        $dbname = "concesionario";
-
-        // Crear la conexión
-        $conn = mysqli_connect($servername, $username, $password, $dbname);
-
-        // Verificar la conexión
-        if (!$conn) {
-            die("Conexión fallida: " . mysqli_connect_error());
-        }
-
-        // Consulta para obtener los alquileres del usuario logueado
-        $sql = "SELECT c.id_coche, c.modelo, c.marca, c.color, c.precio 
-                FROM coches c
-                INNER JOIN alquileres a ON c.id_coche = a.id_coche
-                WHERE a.id_usuario = '$id_usuario'";
-
-        $result = mysqli_query($conn, $sql);
-
-        // Mostrar resultados
-        if (mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                echo "<tr>";
-                echo "<td>" . $row["id_coche"] . "</td>";
-                echo "<td>" . $row["modelo"] . "</td>";
-                echo "<td>" . $row["marca"] . "</td>";
-                echo "<td>" . $row["color"] . "</td>";
-                echo "<td>" . $row["precio"] . "</td>";
-                echo "<td>Sí</td>"; // Alquilado "Sí" porque está en la tabla de alquileres
-                echo "</tr>";
-            }
-        } else {
-            echo "<tr><td colspan='6'>No tienes alquileres registrados.</td></tr>";
-        }
-
-        // Cerrar la conexión
-        mysqli_close($conn);
-        ?>
-    </table>
+        $nombre_usuario = $_SESSION['usuario']; // Obtener el nombre de usuario
+    echo "<div id='div3'><h2>¡Bienvenido a nuestro concesionario, $nombre_usuario!</h2><br><br>Ya puedes ver las nuevas novedades en coches. ¡Corre no te lo pierdas!</div>";
+    ?>
 </body>
 </html>

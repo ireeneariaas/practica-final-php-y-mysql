@@ -52,8 +52,7 @@
     <div id="titulo">
         <h1>CONCESIONARIO</h1>
     </div>
-    <div id="div3">
-        <?php
+    <?php
         session_start(); // Iniciar la sesión
 
         $nombre_usuario = $_SESSION['usuario']; // Obtener el nombre de usuario

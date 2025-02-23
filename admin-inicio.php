@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menú Horizontal</title>
+    <title>Comprador</title>
     <style>
         body {
             margin: 0; /* Elimina margen global del cuerpo */
@@ -89,14 +89,24 @@
     cursor: pointer;
 }
 
+#div3 {
+            background-color: white;
+            margin: 100px;
+            padding: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 700px;
+            border-radius: 8px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div id="titulo">
-        <h1>CONCESIONARIO</h1>
+        <h1>ADMINISTRADOR</h1>
         <form action="cerrar_sesion.php" method="post">
-	<button type="submit" class="logout-button">Cerrar sesión</button>
-</form>
+            <button type="submit" class="logout-button">Cerrar sesión</button>
+        </form>
     </div>
     <div>
         <ul class="menu">
@@ -126,5 +136,11 @@
             </li>
         </ul>
     </div>
+    <?php
+        session_start(); // Iniciar la sesión
+
+        $nombre_usuario = $_SESSION['usuario']; // Obtener el nombre de usuario
+    echo "<div id='div3'><h2>¡Bienvenido a nuestro concesionario, $nombre_usuario!</h2><br><br>Ya puedes ver las nuevas novedades en coches. ¡Corre no te lo pierdas!</div>";
+    ?>
 </body>
 </html>
