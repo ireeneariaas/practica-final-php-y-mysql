@@ -132,17 +132,13 @@
     <h1>Listado de tus coches en alquiler</h1>
     <table border="1">
         <tr>
-            <th>ID Coche</th>
-            <th>Modelo</th>
-            <th>Marca</th>
-            <th>Color</th>
-            <th>Precio</th>
-            <th>Alquilado</th>
+            <th>ID alquiler</th>
+            <th>ID coche</th>
+            <th>prestado</th>
             <th>Devuelto</th>
         </tr>
         <?php
         session_start(); // Iniciar la sesión
-        var_dump($_SESSION); // Depuración de la sesión
 
         // Conexión a la base de datos
         $servername = "localhost";
@@ -162,7 +158,7 @@
         // Consulta para obtener los alquileres del usuario y los detalles de los coches
         $sql = "
             SELECT 
-                coches.id_coche,coches.modelo, coches.marca, coches.color, coches.precio, alquileres.prestado, alquileres.devuelto
+                alquileres.id_alquiler,coches.id_coche, coches.modelo, coches.marca, coches.color, coches.precio, alquileres.prestado, alquileres.devuelto
             FROM 
                 alquileres
             JOIN 
@@ -181,13 +177,11 @@
         if (mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>";
-                echo "<td>" . $row['id_coche'] . "</td>";  // Mostrar ID del coche
-                echo "<td>" . $row['modelo'] . "</td>";
-                echo "<td>" . $row['marca'] . "</td>";
-                echo "<td>" . $row['color'] . "</td>";
-                echo "<td>" . $row['precio'] . " €</td>";
+                echo "<td>" . $row["id_alquiler"] . "</td>";
+                echo "<td>" . $row['id_coche'] . "</td>";
                 echo "<td>" . $row['prestado'] . "</td>";
-                echo "<td>" . ($row['devuelto'] == 'No devuelto') . "</td>";  // Muestra 'No' o 'Sí' según el estado de devolución
+                // Aquí siempre se mostrará "No devuelto"
+                echo "<td>No devuelto</td>";  
                 echo "</tr>";
             }
         } else {

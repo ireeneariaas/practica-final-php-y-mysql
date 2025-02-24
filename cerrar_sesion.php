@@ -46,6 +46,10 @@
             border-radius: 8px;
             text-align: center;
         }
+
+        h3{
+            color:blue;
+        }
     </style>
 </head>
 <body>
@@ -55,9 +59,7 @@
     <?php
         session_start(); // Iniciar la sesión
 
-        $nombre_usuario = $_SESSION['usuario']; // Obtener el nombre de usuario
-        echo "<div id='div3'><h2>Has cerrado sesion en tu cuenta.</h2><br>";
-        echo "<h3>Hasta pronto, $nombre_usuario</h3><br><br>";
+       echo "<div id='div3'><h2>Has cerrado sesion en tu cuenta.</h2><br>";
 
         // Destruir la sesión
         session_destroy();

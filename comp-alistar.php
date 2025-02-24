@@ -18,7 +18,7 @@
 
     table {
         background-color: white;
-        width: 60%;
+        width:95%;
         text-align: center;
         margin: 0 auto;
     }
@@ -111,6 +111,15 @@ a:hover {
         cursor: pointer;
     }
 
+    #div1 {
+            background-color: white;
+            width: 1000px;
+            padding: 20px;
+            margin: 0px auto;
+            border-radius: 8px;
+        }
+
+
     .devolver-button:hover {
         background-color: darkgray;
     }
@@ -140,6 +149,7 @@ a:hover {
         </ul>
     </div>
     <h1>Listado de Alquileres</h1>
+    <div id="div1">
     <form method="POST" action="">
         <table border=1>
             <tr>
@@ -223,5 +233,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['devolver_ids'])) {
         <!-- Botón para devolver los coches seleccionados -->
         <button type="submit" class="devolver-button">Devolver coches seleccionados</button>
     </form>
+</div>
 </body>
 </html>

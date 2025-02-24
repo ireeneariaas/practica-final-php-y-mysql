@@ -113,7 +113,7 @@
 
         #div1 {
             background-color: white;
-            width:1000px;
+            width: 1000px;
             padding: 20px;
             margin: 0px auto;
             border-radius: 8px;
@@ -131,6 +131,13 @@
             cursor: pointer;
         }
 
+        .saldo {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -179,6 +186,22 @@
             die("Conexión fallida: " . mysqli_connect_error());
         }
 
+        // Obtener el saldo actual del usuario
+        $sql_saldo = "SELECT saldo FROM usuarios WHERE id_usuario = ?";
+        $stmt_saldo = mysqli_prepare($conn, $sql_saldo);
+        mysqli_stmt_bind_param($stmt_saldo, "i", $id_usuario);
+        mysqli_stmt_execute($stmt_saldo);
+        $result_saldo = mysqli_stmt_get_result($stmt_saldo);
+        $saldo_usuario = 0;
+
+        if ($row = mysqli_fetch_assoc($result_saldo)) {
+            $saldo_usuario = $row['saldo'];
+        }
+
+        // Mostrar el saldo del usuario
+        echo "<div id='div1'>";
+        echo "<div class='saldo'><strong>Saldo disponible: </strong>" . htmlspecialchars($saldo_usuario) . " €</div>";
+        
         // Consulta para obtener los coches no alquilados
         $sql = "SELECT id_coche, modelo, marca, color, precio, alquilado FROM coches WHERE alquilado='no alquilado'";
         $stmt = mysqli_prepare($conn, $sql);
@@ -186,7 +209,6 @@
         $result_coches = mysqli_stmt_get_result($stmt);
 
         if ($result_coches && mysqli_num_rows($result_coches) > 0) {
-            echo "<div id='div1'>";
             echo "<form action='' method='POST'>";
             echo "<table border='1'>
                     <tr>
@@ -200,7 +222,7 @@
 
             while ($row = mysqli_fetch_assoc($result_coches)) {
                 echo "<tr>";
-                echo "<td><input type='checkbox' name='alquilar_ids[]' value='" . $row['id_coche'] . "'></td>";
+                echo "<td><input type='checkbox' name='alquilar_ids[]' value='" . $row['id_coche'] . "' data-precio='" . $row['precio'] . "' class='coche'></td>";
                 echo "<td>" . htmlspecialchars($row['modelo']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['marca']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['color']) . "</td>";
@@ -212,7 +234,6 @@
             echo "</table>";
             echo "<div class='center'><button type='submit'>Alquilar</button></div>";
             echo "</form>";
-            echo "</div>";
         } else {
             echo "<div class='center'><h2>No hay coches disponibles</h2></div>";
         }
@@ -220,8 +241,22 @@
         // Procesar alquiler de coches seleccionados
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['alquilar_ids'])) {
             $alquilar_ids = $_POST['alquilar_ids'];
+            $total_precio = 0;
 
             foreach ($alquilar_ids as $id_coche) {
+                // Obtener el precio del coche seleccionado
+                $sql_precio = "SELECT precio FROM coches WHERE id_coche = ?";
+                $stmt_precio = mysqli_prepare($conn, $sql_precio);
+                mysqli_stmt_bind_param($stmt_precio, "i", $id_coche);
+                mysqli_stmt_execute($stmt_precio);
+                $result_precio = mysqli_stmt_get_result($stmt_precio);
+                $precio_coche = 0;
+
+                if ($row_precio = mysqli_fetch_assoc($result_precio)) {
+                    $precio_coche = $row_precio['precio'];
+                    $total_precio += $precio_coche;
+                }
+
                 // Insertar en la tabla alquileres con una fecha actual
                 $prestado = date('Y-m-d H:i:s');
                 $insert_sql = "INSERT INTO alquileres (id_usuario, id_coche, prestado) VALUES (?, ?, ?)";
@@ -229,26 +264,33 @@
                 mysqli_stmt_bind_param($stmt_insert, "iis", $id_usuario, $id_coche, $prestado);
 
                 if (mysqli_stmt_execute($stmt_insert)) {
-                    // Actualizar el coche como alquilado y asociar el id_usuario en la tabla coches
+                    // Actualizar el coche como alquilado
                     $update_sql = "UPDATE coches SET alquilado='alquilado', id_usuario=? WHERE id_coche=?";
                     $stmt_update = mysqli_prepare($conn, $update_sql);
                     mysqli_stmt_bind_param($stmt_update, "ii", $id_usuario, $id_coche);
-
-                    if (mysqli_stmt_execute($stmt_update)) {
-                        echo "<div class='center'><p>El coche con ID $id_coche ha sido alquilado correctamente.</p></div>";
-                    } else {
-                        echo "<div class='center'><p>Error al actualizar el estado del coche con ID $id_coche.</p></div>";
-                    }
-                } else {
-                    echo "<div class='center'><p>Error al registrar el alquiler del coche con ID $id_coche.</p></div>";
+                    mysqli_stmt_execute($stmt_update);
                 }
+            }
+
+            echo "<div class='saldo'><strong>Saldo disponible: </strong>" . htmlspecialchars($saldo_usuario) . " €</div>";
+
+            // Restar el saldo del usuario y actualizar en la base de datos
+            if ($saldo_usuario >= $total_precio) {
+                $nuevo_saldo = $saldo_usuario - $total_precio;
+                $update_saldo_sql = "UPDATE usuarios SET saldo=? WHERE id_usuario=?";
+                $stmt_update_saldo = mysqli_prepare($conn, $update_saldo_sql);
+                mysqli_stmt_bind_param($stmt_update_saldo, "di", $nuevo_saldo, $id_usuario);
+                mysqli_stmt_execute($stmt_update_saldo);
+
+                echo "<div class='center'><p>El alquiler fue exitoso. Se han restado " . $total_precio . " € de tu saldo.</p></div>";
+            } else {
+                echo "<div class='center'><p>No tienes suficiente saldo para realizar este alquiler.</p></div>";
             }
         }
 
         // Cerrar conexión
         mysqli_close($conn);
     ?>
-
     </div>
 </body>
 </html>

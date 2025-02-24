@@ -196,94 +196,84 @@
     </div>
 
     <div class="message">
-        <?php
-        session_start(); // Iniciar sesión
-        var_dump($_SESSION);
+    <?php
+session_start(); // Iniciar sesión
 
-        // Verificar si el usuario está logueado
-        if (!isset($_SESSION['id_usuario'])) {
-            echo "<p style='color: red;'>¡No estás logueado! Por favor, inicia sesión para continuar.</p>";
-            exit();
-        }
+// Configuración de la base de datos
+$servername = "localhost";
+$username = "root";
+$password = "rootroot";
+$dbname = "concesionario";
 
-        // Configuración de la base de datos
-        $servername = "localhost";
-        $username = "root";
-        $password = "rootroot";
-        $dbname = "concesionario";
+// Crear conexión
+$conn = mysqli_connect($servername, $username, $password, $dbname);
 
-        // Crear conexión
-        $conn = mysqli_connect($servername, $username, $password, $dbname);
+// Verificar conexión
+if (!$conn) {
+    die("Conexión fallida: " . mysqli_connect_error());
+}
 
-        // Verificar conexión
-        if (!$conn) {
-            die("Conexión fallida: " . mysqli_connect_error());
-        }
+// Obtener el id_usuario más reciente de la tabla registros_clientes
+$sql_registro = "SELECT id_usuario FROM registros_clientes ORDER BY fecha_hora DESC LIMIT 1";
+$resultado_registro = mysqli_query($conn, $sql_registro);
 
-        // Variable para mensajes de estado
-        $mensaje = "";
+// Verificar si se obtuvo un registro válido
+if (mysqli_num_rows($resultado_registro) > 0) {
+    $row = mysqli_fetch_assoc($resultado_registro);
+    $id_usuario = $row['id_usuario']; // Obtener el id_usuario
+} else {
+    echo "<p style='color: red;'>No se encontró un usuario logueado.</p>";
+    exit();
+}
 
-        // Recuperar id_usuario de la sesión
-        $id_usuario = $_SESSION['id_usuario'];
+// Variable para mensajes de estado
+$mensaje = "";
 
-        // Procesar el formulario cuando se envía
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            // Verificar que todos los campos estén completos
-            if (isset($_POST['modelo']) && isset($_POST['marca']) && isset($_POST['color']) && isset($_POST['precio']) && !empty($_POST['precio'])) {
+// Procesar el formulario cuando se envía
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Verificar que todos los campos estén completos
+    if (isset($_POST['modelo']) && isset($_POST['marca']) && isset($_POST['color']) && isset($_POST['precio']) && !empty($_POST['precio'])) {
 
-                // Obtener y limpiar datos del formulario
-                $modelo = mysqli_real_escape_string($conn, $_POST['modelo']);
-                $marca = mysqli_real_escape_string($conn, $_POST['marca']);
-                $color = mysqli_real_escape_string($conn, $_POST['color']);
-                $precio = floatval($_POST['precio']); // Asegurarnos de que sea un valor numérico
+        // Obtener y limpiar datos del formulario
+        $modelo = mysqli_real_escape_string($conn, $_POST['modelo']);
+        $marca = mysqli_real_escape_string($conn, $_POST['marca']);
+        $color = mysqli_real_escape_string($conn, $_POST['color']);
+        $precio = floatval($_POST['precio']); // Asegurarnos de que sea un valor numérico
 
-                // Verificar que el precio es un número positivo
-                if ($precio <= 0) {
-                    $mensaje = "<p style='color: orange; background-color: white; padding: 10px; text-align: center;'>El precio debe ser un valor numérico positivo.</p>";
+        $sql_coche = "INSERT INTO coches (modelo, marca, color, precio, alquilado, id_usuario) VALUES ('$modelo', '$marca', '$color', '$precio', 'No alquilado', '$id_usuario')";
+
+        $resultado_coche = mysqli_query($conn, $sql_coche);
+
+            if ($resultado_coche) {
+                // Obtener el ID del coche insertado
+                $id_coche = mysqli_insert_id($conn);
+
+                // Insertar el alquiler en la tabla 'alquileres'
+                $hora_actual = date('Y-m-d H:i:s'); // Hora actual para el alquiler
+                $sql_alquiler = "INSERT INTO alquileres (id_coche, id_usuario, prestado) VALUES ('$id_coche', '$id_usuario', '$hora_actual')";
+
+                $resultado_alquiler = mysqli_query($conn, $sql_alquiler);
+
+                if ($resultado_alquiler) {
+                    $mensaje = "<p class='center'>¡Coche añadido y alquiler creado correctamente!</p>";
                 } else {
-                    // Insertar el coche
-                    $sql_coche = "INSERT INTO coches (modelo, marca, color, precio, alquilado, id_usuario) 
-                        VALUES ('$modelo', '$marca', '$color', '$precio', 'No alquilado', '$id_usuario')";
-
-                    // Depuración: Imprimir la consulta SQL antes de ejecutarla
-                    echo "<pre>Consulta para coche: $sql_coche</pre>";
-
-                    $resultado_coche = mysqli_query($conn, $sql_coche);
-
-                    if ($resultado_coche) {
-                        // Obtener ID del coche insertado
-                        $id_coche = mysqli_insert_id($conn);
-
-                        // Insertar el alquiler
-                        $hora_actual = date('Y-m-d H:i:s');
-                        $sql_alquiler = "INSERT INTO alquileres (id_coche, id_usuario, prestado) 
-                                         VALUES ('$id_coche', '$id_usuario', '$hora_actual')";
-
-                        // Depuración: Imprimir la consulta SQL antes de ejecutarla
-                        echo "<pre>Consulta para alquiler: $sql_alquiler</pre>";
-
-                        $resultado_alquiler = mysqli_query($conn, $sql_alquiler);
-
-                        if ($resultado_alquiler) {
-                            $mensaje = "<p class='center'>¡Coche añadido y alquiler creado correctamente!</p>";
-                        } else {
-                            $mensaje = "<p class='center'>Error al crear el alquiler: " . mysqli_error($conn) . "</p>";
-                        }
-                    } else {
-                        $mensaje = "<p class='center'>Error al añadir el coche: " . mysqli_error($conn) . "</p>";
-                    }
+                    $mensaje = "<p class='center'>Error al crear el alquiler: " . mysqli_error($conn) . "</p>";
                 }
             } else {
-                $mensaje = "<p class='center'>Por favor, complete todos los campos del formulario.</p>";
+                $mensaje = "<p class='center'>Error al añadir el coche: " . mysqli_error($conn) . "</p>";
             }
         }
+    } else {
+        $mensaje = "<p class='center'>Por favor, complete todos los campos del formulario.</p>";
+    }
 
-        // Cerrar la conexión
-        mysqli_close($conn);
+// Cerrar la conexión
+mysqli_close($conn);
 
-        // Mostrar el mensaje
-        echo $mensaje;
-        ?>
+// Mostrar el mensaje
+echo $mensaje;
+?>
+
     </div>
 </body>
 </html>

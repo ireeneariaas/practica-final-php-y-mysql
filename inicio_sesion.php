@@ -130,6 +130,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['usuario']) && isset($_
         $_SESSION['tipo'] = $row['tipo']; // Almacenar el tipo de usuario
         $_SESSION['saldo'] = $row['saldo']; // Almacenar el saldo del usuario
 
+        // Insertar el inicio de sesión en la tabla registros_clientes
+        $id_usuario = $row['id_usuario']; // Obtener el id_usuario
+        $fecha_hora = date('Y-m-d H:i:s'); // Obtener la fecha y hora actual
+        $insert_sql = "INSERT INTO registros_clientes (usuario, contraseña, fecha_hora, id_usuario) VALUES ('$nombre_usuario', '$contraseña', '$fecha_hora', '$id_usuario')";
+        mysqli_query($conn, $insert_sql);
+
         // Redirigir según el tipo de usuario
         if ($row['tipo'] == 'Vendedor') {
             header("Location: ven-vendedor.php");
@@ -151,5 +157,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['usuario']) && isset($_
 
 mysqli_close($conn);
 ?>
+
 </body>
 </html>
