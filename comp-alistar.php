@@ -5,113 +5,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listado de Alquileres</title>
     <style>
-    body {
-        background-color: gray;
-        background-image: url("./concesionario.jpg");
-        background-size: cover; 
-        background-position: center; 
-        height: 800px;
-        margin: 0;
-        font-family: Arial;
-        align-items: center;
-    }
+        body {
+            background-color: gray;
+            background-image: url("./concesionario.jpg");
+            background-size: cover; 
+            background-position: center; 
+            height: 800px;
+            margin: 0;
+            font-family: Arial;
+            align-items: center;
+        }
 
-    table {
-        background-color: white;
-        width:95%;
-        text-align: center;
-        margin: 0 auto;
-    }
+        table {
+            background-color: white;
+            width:95%;
+            text-align: center;
+            margin: 0 auto;
+        }
 
-    h1 {
-        color: white;
-    }
+        h1 {
+            color: white;
+        }
 
-    #titulo {
-        background-color: gray;
-        color: white;
-        margin: 0;
-        padding: 0;
-    }
+        #titulo {
+            background-color: gray;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
 
-    h1 {
-        margin: 0;
-        padding: 10px;
-        text-align: center;
-    }
+        h1 {
+            margin: 0;
+            padding: 10px;
+            text-align: center;
+        }
 
-    .menu {
-    display: flex;
-    justify-content: center;
-    background: #f1f1f1;
-    border: 1px solid #ccc;
-    margin: 0;
-    padding: 0;
-}
+        .menu {
+            display: flex;
+            justify-content: center;
+            background: #f1f1f1;
+            border: 1px solid #ccc;
+            margin: 0;
+            padding: 0;
+        }
 
-.menu > li {
-    flex: none;
-}
+        .menu > li {
+            flex: none;
+        }
 
-ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
-li {
-    position: relative;
-}
+        li {
+            position: relative;
+        }
 
-ul ul {
-    display: none;
-    position: absolute;
-    left: 0;
-    background: #f9f9f9;
-    padding: 0;
-    border: 1px solid #ccc;
-}
+        ul ul {
+            display: none;
+            position: absolute;
+            left: 0;
+            background: #f9f9f9;
+            padding: 0;
+            border: 1px solid #ccc;
+        }
 
-li:hover > ul {
-    display: block;
-}
+        li:hover > ul {
+            display: block;
+        }
 
-a {
-    text-decoration: none;
-    padding: 10px 15px;
-    display: block;
-    color: #333;
-    white-space: nowrap;
-}
+        a {
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block;
+            color: #333;
+            white-space: nowrap;
+        }
 
-a:hover {
-    background: #ddd;
-}
+        a:hover {
+            background: #ddd;
+        }
 
-    .logout-button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background-color: black;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+        .logout-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: black;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-    .devolver-button {
-        display: block;
-        margin: 20px auto;
-        background-color: black;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+        .devolver-button {
+            display: block;
+            margin: 20px auto;
+            background-color: black;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-    #div1 {
+        #div1 {
             background-color: white;
             width: 1000px;
             padding: 20px;
@@ -119,10 +119,9 @@ a:hover {
             border-radius: 8px;
         }
 
-
-    .devolver-button:hover {
-        background-color: darkgray;
-    }
+        .devolver-button:hover {
+            background-color: darkgray;
+        }
     </style>
 </head>
 <body>
@@ -195,36 +194,51 @@ a:hover {
             }
 
             // Procesar la devolución de coches seleccionados
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['devolver_ids'])) {
-    $devolver_ids = $_POST['devolver_ids'];
-    $fecha_devuelto = date('Y-m-d H:i:s'); // Fecha y hora actual
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['devolver_ids'])) {
+                $devolver_ids = $_POST['devolver_ids'];
+                $fecha_devuelto = date('Y-m-d H:i:s'); // Fecha y hora actual
 
-    foreach ($devolver_ids as $id_alquiler) {
-        // Obtener el id_coche para actualizar su estado
-        $sql_coche = "SELECT id_coche FROM alquileres WHERE id_alquiler = '$id_alquiler'";
-        $result_coche = mysqli_query($conn, $sql_coche);
-        $row_coche = mysqli_fetch_assoc($result_coche);
-        $id_coche = $row_coche["id_coche"];
+                foreach ($devolver_ids as $id_alquiler) {
+                    // Obtener el id_coche para actualizar su estado
+                    $sql_coche = "SELECT id_coche FROM alquileres WHERE id_alquiler = '$id_alquiler'";
+                    $result_coche = mysqli_query($conn, $sql_coche);
+                    $row_coche = mysqli_fetch_assoc($result_coche);
+                    $id_coche = $row_coche["id_coche"];
 
-        // Mover el alquiler a la tabla de devoluciones sin eliminar
-        $sql_devolucion = "INSERT INTO devoluciones (id_alquiler, id_usuario, id_coche, prestado, devuelto)
-                           SELECT id_alquiler, id_usuario, id_coche, prestado, '$fecha_devuelto' FROM alquileres WHERE id_alquiler = '$id_alquiler'";
-        mysqli_query($conn, $sql_devolucion);
+                    // Obtener el precio del coche
+                    $sql_precio = "SELECT precio FROM coches WHERE id_coche = '$id_coche'";
+                    $result_precio = mysqli_query($conn, $sql_precio);
+                    $row_precio = mysqli_fetch_assoc($result_precio);
+                    $precio_coche = $row_precio["precio"];
 
-        // Eliminar el coche de la tabla de alquileres (pero no de devoluciones)
-        $sql_update_alquiler = "UPDATE alquileres SET devuelto = '$fecha_devuelto' WHERE id_alquiler = '$id_alquiler'";
-        mysqli_query($conn, $sql_update_alquiler);
+                    // Sumar el precio del coche devuelto al saldo del usuario
+                    $sql_saldo = "SELECT saldo FROM registros_clientes WHERE id_usuario = '$id_usuario'";
+                    $result_saldo = mysqli_query($conn, $sql_saldo);
+                    $row_saldo = mysqli_fetch_assoc($result_saldo);
+                    $nuevo_saldo = $row_saldo["saldo"] + $precio_coche;
 
-        // Cambiar el estado del coche a "no alquilado"
-        $update_coches_sql = "UPDATE coches SET alquilado = 'no alquilado', id_usuario = NULL WHERE id_coche = '$id_coche'";
-        mysqli_query($conn, $update_coches_sql);
-    }
+                    // Actualizar saldo del usuario
+                    $sql_update_saldo = "UPDATE registros_clientes SET saldo = '$nuevo_saldo' WHERE id_usuario = '$id_usuario'";
+                    mysqli_query($conn, $sql_update_saldo);
 
-    // Recargar la página para reflejar los cambios
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit;
-}
+                    // Mover el alquiler a la tabla de devoluciones sin eliminar
+                    $sql_devolucion = "INSERT INTO devoluciones (id_alquiler, id_usuario, id_coche, prestado, devuelto)
+                                       SELECT id_alquiler, id_usuario, id_coche, prestado, '$fecha_devuelto' FROM alquileres WHERE id_alquiler = '$id_alquiler'";
+                    mysqli_query($conn, $sql_devolucion);
 
+                    // Eliminar el coche de la tabla de alquileres (pero no de devoluciones)
+                    $sql_update_alquiler = "UPDATE alquileres SET devuelto = '$fecha_devuelto' WHERE id_alquiler = '$id_alquiler'";
+                    mysqli_query($conn, $sql_update_alquiler);
+
+                    // Cambiar el estado del coche a "no alquilado"
+                    $update_coches_sql = "UPDATE coches SET alquilado = 'no alquilado', id_usuario = NULL WHERE id_coche = '$id_coche'";
+                    mysqli_query($conn, $update_coches_sql);
+                }
+
+                // Recargar la página para reflejar los cambios
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit;
+            }
 
             mysqli_close($conn);
             ?>

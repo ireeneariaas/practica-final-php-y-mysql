@@ -200,7 +200,7 @@
 
         // Mostrar el saldo del usuario
         echo "<div id='div1'>";
-        echo "<div class='saldo'><strong>Saldo disponible: </strong>" . htmlspecialchars($saldo_usuario) . " €</div>";
+        echo "<div class='saldo'><strong>Saldo disponible: </strong>" . htmlspecialchars($saldo_usuario) . " €</div><br><br>";
         
         // Consulta para obtener los coches no alquilados
         $sql = "SELECT id_coche, modelo, marca, color, precio, alquilado FROM coches WHERE alquilado='no alquilado'";

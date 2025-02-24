@@ -117,42 +117,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['usuario']) && isset($_
     $contraseña = mysqli_real_escape_string($conn, $_POST['contraseña']);
 
     // Consulta para verificar las credenciales
-    $sql = "SELECT id_usuario, nombre, tipo, saldo FROM usuarios WHERE nombre_usuario = '$nombre_usuario' AND password = '$contraseña'";
+    $sql = "SELECT id_usuario, nombre, tipo, saldo, password FROM usuarios WHERE nombre_usuario = '$nombre_usuario'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
 
-        // Crear la sesión
-        $_SESSION['id_usuario'] = $row['id_usuario']; // Almacenar el ID del usuario
-        $_SESSION['nombre_usuario'] = $nombre_usuario; // Almacenar el nombre de usuario
-        $_SESSION['nombre'] = $row['nombre']; // Almacenar el nombre real del usuario
-        $_SESSION['tipo'] = $row['tipo']; // Almacenar el tipo de usuario
-        $_SESSION['saldo'] = $row['saldo']; // Almacenar el saldo del usuario
+        // Verificar la contraseña usando password_verify
+        if (password_verify($contraseña, $row['password'])) {
+            // Crear la sesión
+            $_SESSION['id_usuario'] = $row['id_usuario'];
+            $_SESSION['nombre_usuario'] = $nombre_usuario;
+            $_SESSION['nombre'] = $row['nombre'];
+            $_SESSION['tipo'] = $row['tipo'];
+            $_SESSION['saldo'] = $row['saldo'];
 
-        // Insertar el inicio de sesión en la tabla registros_clientes
-        $id_usuario = $row['id_usuario']; // Obtener el id_usuario
-        $saldo = (int)$row['saldo']; // Asegurarse de que el saldo sea un número entero
-        $fecha_hora = date('Y-m-d H:i:s'); // Obtener la fecha y hora actual
+            // Insertar el inicio de sesión en la tabla registros_clientes
+            $id_usuario = $row['id_usuario'];
+            $saldo = (int)$row['saldo'];
+            $fecha_hora = date('Y-m-d H:i:s');
 
-        // Modificar la consulta de inserción para incluir el saldo como un valor INT
-        $insert_sql = "INSERT INTO registros_clientes (usuario, contraseña, fecha_hora, id_usuario, saldo) 
-                       VALUES ('$nombre_usuario', '$contraseña', '$fecha_hora', '$id_usuario', $saldo)";
-        mysqli_query($conn, $insert_sql);
+            $insert_sql = "INSERT INTO registros_clientes (usuario, contraseña, fecha_hora, id_usuario, saldo) 
+                           VALUES ('$nombre_usuario', '$contraseña', '$fecha_hora', '$id_usuario', $saldo)";
+            mysqli_query($conn, $insert_sql);
 
-        // Redirigir según el tipo de usuario
-        if ($row['tipo'] == 'Vendedor') {
-            header("Location: ven-vendedor.php");
-            exit();
-        } elseif ($row['tipo'] == 'Comprador') {
-            header("Location: comp-comprador.php");
-            exit();
-        } elseif ($row['tipo'] == 'Administrador') {
-            header("Location: admin-inicio.php");
-            exit();
+            // Redirigir según el tipo de usuario
+            if ($row['tipo'] == 'Vendedor') {
+                header("Location: ven-vendedor.php");
+                exit();
+            } elseif ($row['tipo'] == 'Comprador') {
+                header("Location: comp-comprador.php");
+                exit();
+            } elseif ($row['tipo'] == 'Administrador') {
+                header("Location: admin-inicio.php");
+                exit();
+            }
+        } else {
+            // Contraseña incorrecta
+            $error_message = "Usuario o contraseña incorrectos";
         }
     } else {
-        // Credenciales incorrectas
+        // Usuario no encontrado
         $error_message = "Usuario o contraseña incorrectos";
     }
 
@@ -161,6 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['usuario']) && isset($_
 
 mysqli_close($conn);
 ?>
+
 
 </body>
 </html>
