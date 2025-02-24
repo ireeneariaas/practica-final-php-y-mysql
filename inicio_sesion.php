@@ -80,7 +80,7 @@
 
     <div id="div1">
         <h2>Iniciar Sesión</h2>
-        <form id="loginForm" action="" method="post" onsubmit="return validateForm()">
+        <form id="loginForm" action="" method="post">
             <label for="usuario">Usuario</label>
             <input type="text" id="usuario" name="usuario" required>
 
@@ -93,124 +93,63 @@
         </form>
     </div>
 
-    <!-- Div para el mensaje de error -->
     <div class="message" id="message"></div>
+    <?php
+session_start(); // Iniciar la sesión
 
-    <script>
-        // Función para validar los campos del formulario
-        function validateForm() {
-            var usuario = document.getElementById('usuario').value;
-            var contrasena = document.getElementById('contraseña').value; // Cambié aquí para que coincida con el nombre del campo
-            var message = document.getElementById('message');
-
-            // Verificar si los campos están vacíos
-            if (usuario.trim() === "" || contrasena.trim() === "") {
-                message.innerHTML = "<p style='color: red;'>Por favor, completa ambos campos.</p>";
-                return false; // Impide que el formulario se envíe
-            }
-
-            // Si los campos son válidos
-            message.innerHTML = "";
-            return true; // Permite que el formulario se envíe
-        }
-    </script>
-<?php
-session_start();
-ob_start(); // Previene errores de salida antes de header()
-
-// Verificar si la sesión está funcionando correctamente
-var_dump($_SESSION); // Muestra los datos almacenados en la sesión
-echo "<br>";
-
-if (empty(session_save_path())) {
-    echo "<p style='color: red;'>Error: session.save_path no está configurado correctamente.</p>";
-} else {
-    echo "<p>Ruta de sesión: " . session_save_path() . "</p>";
-}
-
-// Datos de conexión a la base de datos
+// Conexión a la base de datos
 $servername = "localhost";
 $username = "root";
 $password = "rootroot";
 $dbname = "concesionario";
 
-// Crear la conexión
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-// Verificar la conexión
 if (!$conn) {
-    die("<p style='text-align: center; color: white;'>Conexión fallida: " . mysqli_connect_error() . "</p>");
+    die("Conexión fallida: " . mysqli_connect_error());
 }
 
+$error_message = "";
 
-// Verificar si el formulario fue enviado
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $usuario = $_POST['usuario'];  // Nombre de usuario del formulario
-    $contrasena = $_POST['contraseña'];  // Contraseña del formulario
+// Procesar el formulario de inicio de sesión
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['usuario']) && isset($_POST['contraseña'])) {
+    $nombre_usuario = mysqli_real_escape_string($conn, $_POST['usuario']);
+    $contraseña = mysqli_real_escape_string($conn, $_POST['contraseña']);
 
-    // Consulta para verificar si el usuario existe en la base de datos
-    $sql = "SELECT * FROM usuarios WHERE nombre_usuario = ?";
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "s", $usuario);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
+    // Consulta para verificar las credenciales
+    $sql = "SELECT id_usuario, nombre, tipo, saldo FROM usuarios WHERE nombre_usuario = '$nombre_usuario' AND password = '$contraseña'";
+    $result = mysqli_query($conn, $sql);
 
-    // Verificar si el usuario existe
-    if ($row = mysqli_fetch_assoc($result)) {
-        if ($row['tipo'] == 'Administrador') {
-            if ($contrasena == $row['password']) {
-                $_SESSION['id_usuario'] = $row['id_usuario'];
-                $_SESSION['usuario'] = $usuario;
-                $_SESSION['tipo_usuario'] = $row['tipo'];
+    if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
 
-                // Verificar si la sesión está correctamente almacenada antes de redirigir
-                if (!isset($_SESSION['id_usuario'])) {
-                    echo "<p style='color: red;'>Error: No se guardó el ID de usuario en la sesión.</p>";
-                    exit();
-                }
+        // Crear la sesión
+        $_SESSION['id_usuario'] = $row['id_usuario']; // Almacenar el ID del usuario
+        $_SESSION['nombre_usuario'] = $nombre_usuario; // Almacenar el nombre de usuario
+        $_SESSION['nombre'] = $row['nombre']; // Almacenar el nombre real del usuario
+        $_SESSION['tipo'] = $row['tipo']; // Almacenar el tipo de usuario
+        $_SESSION['saldo'] = $row['saldo']; // Almacenar el saldo del usuario
 
-                header("Location: admin-inicio.php");
-                exit();
-            } else {
-                echo "<p style='text-align: center; color: white;'>Contraseña incorrecta para Administrador.</p>";
-            }
-        } else {
-            if (password_verify($contrasena, $row['password'])) {
-                $_SESSION['id_usuario'] = $row['id_usuario'];
-                $_SESSION['usuario'] = $usuario;
-                $_SESSION['tipo_usuario'] = $row['tipo'];
-
-                // Verificar si la sesión está correctamente almacenada antes de redirigir
-                if (!isset($_SESSION['id_usuario'])) {
-                    echo "<p style='color: red;'>Error: No se guardó el ID de usuario en la sesión.</p>";
-                    exit();
-                }
-
-                switch ($row['tipo']) {
-                    case 'Vendedor':
-                        header("Location: ven-vendedor.php");
-                        exit();
-                    case 'Comprador':
-                        header("Location: comp-comprador.php");
-                        exit();
-                    default:
-                        echo "<p style='text-align: center; color: white;'>Tipo de usuario desconocido.</p>";
-                        break;
-                }
-            } else {
-                echo "<p style='text-align: center; color: white;'>Contraseña incorrecta.</p>";
-            }
+        // Redirigir según el tipo de usuario
+        if ($row['tipo'] == 'Vendedor') {
+            header("Location: ven-vendedor.php");
+            exit();
+        } elseif ($row['tipo'] == 'Comprador') {
+            header("Location: comp-comprador.php");
+            exit();
+        } elseif ($row['tipo'] == 'Administrador') {
+            header("Location: admin-inicio.php");
+            exit();
         }
     } else {
-        echo "<p style='text-align: center; color: white;'>Este usuario no está registrado en la base de datos del concesionario.</p>";
+        // Credenciales incorrectas
+        $error_message = "Usuario o contraseña incorrectos";
     }
 
-    mysqli_stmt_close($stmt);
+    mysqli_free_result($result);
 }
 
 mysqli_close($conn);
 ?>
-
-
 </body>
 </html>

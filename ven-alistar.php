@@ -22,7 +22,6 @@
             width: 60%;
             text-align: center;
             align-items: center;
-            border-collapse: collapse;
             margin: 0 auto; /* Esto centra la tabla */
         }
 
@@ -139,61 +138,66 @@
             <th>Color</th>
             <th>Precio</th>
             <th>Alquilado</th>
+            <th>Devuelto</th>
         </tr>
         <?php
-// Iniciar sesión
-session_start();
+        session_start(); // Iniciar la sesión
+        var_dump($_SESSION); // Depuración de la sesión
 
-// Obtener el ID del usuario logueado
-$id_usuario = $_SESSION['id_usuario'];
+        // Conexión a la base de datos
+        $servername = "localhost";
+        $username = "root";
+        $password = "rootroot";
+        $dbname = "concesionario";
 
-// Datos de conexión
-$servername = "localhost";
-$username = "root";
-$password = "rootroot";
-$dbname = "concesionario";
+        $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-// Crear la conexión
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+        if (!$conn) {
+            die("Conexión fallida: " . mysqli_connect_error());
+        }
 
-// Verificar la conexión
-if (!$conn) {
-    die("Conexión fallida: " . mysqli_connect_error());
-}
+        // Obtener el ID del usuario desde la sesión
+        $id_usuario = $_SESSION['id_usuario'];
 
-// Consulta para obtener los coches creados por el usuario logueado
-$sql = "SELECT * FROM coches WHERE id_usuario = '$id_usuario'";
+        // Consulta para obtener los alquileres del usuario y los detalles de los coches
+        $sql = "
+            SELECT 
+                coches.id_coche,coches.modelo, coches.marca, coches.color, coches.precio, alquileres.prestado, alquileres.devuelto
+            FROM 
+                alquileres
+            JOIN 
+                coches on alquileres.id_coche = coches.id_coche
+            WHERE 
+                alquileres.id_usuario = $id_usuario
+        ";
 
-$result = mysqli_query($conn, $sql);
+        $result = mysqli_query($conn, $sql);
 
-// Mostrar resultados
-if (mysqli_num_rows($result) > 0) {
-    echo "<table border='1'>
-            <tr>
-                <th>ID Coche</th>
-                <th>Modelo</th>
-                <th>Marca</th>
-                <th>Color</th>
-                <th>Precio</th>
-            </tr>";
-    while ($row = mysqli_fetch_assoc($result)) {
-        echo "<tr>";
-        echo "<td>" . $row["id_coche"] . "</td>";
-        echo "<td>" . $row["modelo"] . "</td>";
-        echo "<td>" . $row["marca"] . "</td>";
-        echo "<td>" . $row["color"] . "</td>";
-        echo "<td>" . $row["precio"] . "</td>";
-        echo "</tr>";
-    }
-    echo "</table>";
-} else {
-    echo "<p>No tienes coches registrados.</p>";
-}
+        if (!$result) {
+            die("Error en la consulta: " . mysqli_error($conn));
+        }
 
-// Cerrar la conexión
-mysqli_close($conn);
-?>
+        // Mostrar los resultados de la consulta
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>";
+                echo "<td>" . $row['id_coche'] . "</td>";  // Mostrar ID del coche
+                echo "<td>" . $row['modelo'] . "</td>";
+                echo "<td>" . $row['marca'] . "</td>";
+                echo "<td>" . $row['color'] . "</td>";
+                echo "<td>" . $row['precio'] . " €</td>";
+                echo "<td>" . $row['prestado'] . "</td>";
+                echo "<td>" . ($row['devuelto'] == 'No devuelto') . "</td>";  // Muestra 'No' o 'Sí' según el estado de devolución
+                echo "</tr>";
+            }
+        } else {
+            // Mostrar mensaje en una fila que ocupe todas las columnas
+            echo "<tr><td colspan='7'>No has realizado ningún alquiler.</td></tr>";
+        }
 
+        // Cerrar la conexión
+        mysqli_close($conn);
+        ?>
     </table>
 </body>
 </html>
