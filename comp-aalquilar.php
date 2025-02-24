@@ -186,8 +186,8 @@
             die("Conexión fallida: " . mysqli_connect_error());
         }
 
-        // Obtener el saldo actual del usuario
-        $sql_saldo = "SELECT saldo FROM usuarios WHERE id_usuario = ?";
+        // Obtener el saldo actual del usuario desde la tabla registros_clientes
+        $sql_saldo = "SELECT saldo FROM registros_clientes WHERE id_usuario = ?";
         $stmt_saldo = mysqli_prepare($conn, $sql_saldo);
         mysqli_stmt_bind_param($stmt_saldo, "i", $id_usuario);
         mysqli_stmt_execute($stmt_saldo);
@@ -272,15 +272,21 @@
                 }
             }
 
-            echo "<div class='saldo'><strong>Saldo disponible: </strong>" . htmlspecialchars($saldo_usuario) . " €</div>";
-
-            // Restar el saldo del usuario y actualizar en la base de datos
+            // Restar el saldo del usuario y actualizar en las dos tablas
             if ($saldo_usuario >= $total_precio) {
                 $nuevo_saldo = $saldo_usuario - $total_precio;
-                $update_saldo_sql = "UPDATE usuarios SET saldo=? WHERE id_usuario=?";
+
+                // Actualizar saldo en la tabla registros_clientes
+                $update_saldo_sql = "UPDATE registros_clientes SET saldo=? WHERE id_usuario=?";
                 $stmt_update_saldo = mysqli_prepare($conn, $update_saldo_sql);
                 mysqli_stmt_bind_param($stmt_update_saldo, "di", $nuevo_saldo, $id_usuario);
                 mysqli_stmt_execute($stmt_update_saldo);
+
+                // Actualizar saldo en la tabla usuarios
+                $update_saldo_usuarios = "UPDATE usuarios SET saldo=? WHERE id_usuario=?";
+                $stmt_update_usuarios = mysqli_prepare($conn, $update_saldo_usuarios);
+                mysqli_stmt_bind_param($stmt_update_usuarios, "di", $nuevo_saldo, $id_usuario);
+                mysqli_stmt_execute($stmt_update_usuarios);
 
                 echo "<div class='center'><p>El alquiler fue exitoso. Se han restado " . $total_precio . " € de tu saldo.</p></div>";
             } else {

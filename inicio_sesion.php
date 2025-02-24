@@ -132,8 +132,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['usuario']) && isset($_
 
         // Insertar el inicio de sesión en la tabla registros_clientes
         $id_usuario = $row['id_usuario']; // Obtener el id_usuario
+        $saldo = (int)$row['saldo']; // Asegurarse de que el saldo sea un número entero
         $fecha_hora = date('Y-m-d H:i:s'); // Obtener la fecha y hora actual
-        $insert_sql = "INSERT INTO registros_clientes (usuario, contraseña, fecha_hora, id_usuario) VALUES ('$nombre_usuario', '$contraseña', '$fecha_hora', '$id_usuario')";
+
+        // Modificar la consulta de inserción para incluir el saldo como un valor INT
+        $insert_sql = "INSERT INTO registros_clientes (usuario, contraseña, fecha_hora, id_usuario, saldo) 
+                       VALUES ('$nombre_usuario', '$contraseña', '$fecha_hora', '$id_usuario', $saldo)";
         mysqli_query($conn, $insert_sql);
 
         // Redirigir según el tipo de usuario
