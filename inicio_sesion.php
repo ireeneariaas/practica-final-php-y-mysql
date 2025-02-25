@@ -121,22 +121,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['usuario']) && isset($_
 
         // **Verificar la contraseña con password_verify**
         if (password_verify($contraseña, $row['password'])) {
+            // Guardar datos en la sesión
             $_SESSION['id_usuario'] = $row['id_usuario'];
             $_SESSION['nombre_usuario'] = $nombre_usuario;
             $_SESSION['nombre'] = $row['nombre'];
             $_SESSION['tipo'] = $row['tipo'];
             $_SESSION['saldo'] = $row['saldo'];
 
-            // Redirigir según el tipo de usuario
-            if ($row['tipo'] == 'Vendedor') {
-                header("Location: ven-vendedor.php");
-                exit();
-            } elseif ($row['tipo'] == 'Comprador') {
-                header("Location: comp-comprador.php");
-                exit();
-            } elseif ($row['tipo'] == 'Administrador') {
-                header("Location: admin-inicio.php");
-                exit();
+            // **Insertar los datos del usuario en la tabla registros_clientes**
+            $id_usuario = $row['id_usuario'];
+            $nombre_usuario = $row['nombre_usuario'];  // Obtener nombre de usuario de la tabla usuarios
+            $saldo = $row['saldo'];
+
+            // Insertar en la tabla registros_clientes
+            $insert_sql = "INSERT INTO registros_clientes (id_usuario, nombre_usuario, saldo) 
+                           VALUES ('$id_usuario', '$nombre_usuario', '$saldo')";
+
+            if (mysqli_query($conn, $insert_sql)) {
+                // Redirigir según el tipo de usuario
+                if ($row['tipo'] == 'Vendedor') {
+                    header("Location: ven-vendedor.php");
+                    exit();
+                } elseif ($row['tipo'] == 'Comprador') {
+                    header("Location: comp-comprador.php");
+                    exit();
+                } elseif ($row['tipo'] == 'Administrador') {
+                    header("Location: admin-inicio.php");
+                    exit();
+                }
+            } else {
+                echo "Error al registrar los datos del usuario: " . mysqli_error($conn);
             }
         } else {
             echo "<p class='error'>Usuario o contraseña incorrectos</p>";
@@ -148,12 +162,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['usuario']) && isset($_
     mysqli_free_result($result);
 }
 
-
-
 mysqli_close($conn);
 ?>
 
-
-
+    </div>
 </body>
 </html>

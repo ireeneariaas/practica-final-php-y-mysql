@@ -271,7 +271,7 @@
                     mysqli_stmt_execute($stmt_update);
                 }
             }
-
+            echo "</div>";
             // Restar el saldo del usuario y actualizar en las dos tablas
             if ($saldo_usuario >= $total_precio) {
                 $nuevo_saldo = $saldo_usuario - $total_precio;
@@ -297,6 +297,5 @@
         // Cerrar conexión
         mysqli_close($conn);
     ?>
-    </div>
 </body>
 </html>

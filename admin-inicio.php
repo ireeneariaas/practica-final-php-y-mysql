@@ -123,6 +123,7 @@
                 <ul>
                     <li><a href="admin-ulistar.php">Listar</a></li>
                     <li><a href="admin-uanadir.php">Añadir</a></li>
+                  
                     <li><a href="admin-ubuscar.php">Buscar</a></li>
                     <li><a href="admin-umodificar.php">Modificar</a></li>
                     <li><a href="admin-uborrar.php">Borrar</a></li>
@@ -140,7 +141,7 @@
         session_start(); // Iniciar la sesión
 
         $nombre_usuario = $_SESSION['nombre_usuario']; // Obtener el nombre de usuario
-    echo "<div id='div3'><h2>¡Bienvenido a nuestro concesionario, $nombre_usuario admin!</h2><br><br>Ya puedes ver las nuevas novedades en coches. ¡Corre no te lo pierdas!</div>";
+    echo "<div id='div3'><h2>¡Bienvenido a nuestro concesionario, $nombre_usuario!</h2><br><br>Ya puedes ver las nuevas novedades en coches. ¡Corre no te lo pierdas!</div>";
     ?>
 </body>
 </html>
