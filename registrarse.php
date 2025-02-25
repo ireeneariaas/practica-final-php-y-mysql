@@ -150,63 +150,59 @@
 
     <div id="responseMessage">
     <?php
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $servername = "localhost";
-            $username = "root";
-            $password = "rootroot";
-            $dbname = "concesionario";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $servername = "localhost";
+    $username = "root";
+    $password = "rootroot";
+    $dbname = "concesionario";
 
-            // Conectar a la base de datos
-            $conn = mysqli_connect($servername, $username, $password, $dbname);
+    // Conectar a la base de datos
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-            if (!$conn) {
-                die("Conexión fallida: " . mysqli_connect_error());
-            }
+    if (!$conn) {
+        die("Conexión fallida: " . mysqli_connect_error());
+    }
 
-            // Recoger los datos del formulario
-            $nombre_usuario = $_POST['nombre_usuario'];
-            $nombre = $_POST['nombre'];
-            $apellidos = $_POST['apellidos'];
-            $dni = $_POST['dni'];
-            $saldo = $_POST['saldo'];
-            $password = $_POST['pass'];
-            $password_repeat = $_POST['pass_repeat'];  // Contraseña repetida
-            $tipo_cliente = $_POST['tipo'];
+    // Recoger los datos del formulario
+    $nombre_usuario = mysqli_real_escape_string($conn, $_POST['nombre_usuario']);
+    $nombre = mysqli_real_escape_string($conn, $_POST['nombre']);
+    $apellidos = mysqli_real_escape_string($conn, $_POST['apellidos']);
+    $dni = mysqli_real_escape_string($conn, $_POST['dni']);
+    $saldo = (float)$_POST['saldo'];
+    $password = $_POST['pass'];
+    $password_repeat = $_POST['pass_repeat'];  
+    $tipo_cliente = $_POST['tipo'];
 
-            // Verificar si el nombre de usuario ya existe
-            $check_user_sql = "SELECT * FROM usuarios WHERE nombre_usuario = '$nombre_usuario'";
-            $result = mysqli_query($conn, $check_user_sql);
+    // Verificar si el nombre de usuario ya existe
+    $check_user_sql = "SELECT * FROM usuarios WHERE nombre_usuario = '$nombre_usuario'";
+    $result = mysqli_query($conn, $check_user_sql);
 
-            if (mysqli_num_rows($result) > 0) {
-                // Si el nombre de usuario ya existe, mostrar un mensaje de error
-                echo "<p class='error'>El nombre de usuario ya está registrado. Por favor, elige otro.</p>";
+    if (mysqli_num_rows($result) > 0) {
+        echo "<p class='error'>El nombre de usuario ya está registrado. Elige otro.</p>";
+    } else {
+        // Verificar si las contraseñas coinciden
+        if ($password === $password_repeat) {
+            // **Cifrar la contraseña**
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+            // Insertar en la base de datos
+            $sql = "INSERT INTO usuarios (nombre_usuario, nombre, apellidos, dni, saldo, password, tipo) 
+                    VALUES ('$nombre_usuario', '$nombre', '$apellidos', '$dni', $saldo, '$hashed_password', '$tipo_cliente')";
+
+            if (mysqli_query($conn, $sql)) {
+                echo "<p class='success'>¡Usuario registrado correctamente!</p>";
             } else {
-                // Verificar si las contraseñas coinciden
-                if ($password === $password_repeat) {
-                    // Si las contraseñas coinciden, insertar el nuevo usuario
-                    // Encriptar la contraseña antes de almacenarla en la base de datos
-                    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-                    $sql = "INSERT INTO usuarios (nombre_usuario, nombre, apellidos, dni, saldo, password, tipo) 
-                            VALUES ('$nombre_usuario', '$nombre', '$apellidos', '$dni', $saldo, '$hashed_password', '$tipo_cliente')";
-
-                    if (mysqli_query($conn, $sql)) {
-                        // Si la inserción es exitosa, mostrar mensaje de éxito
-                        echo "<p class='success'>¡Usuario registrado correctamente!</p>";
-                    } else {
-                        // Si hay un error al insertar el usuario, mostrar el error de MySQL
-                        echo "<p class='error'>Hubo un error al registrar el usuario: " . mysqli_error($conn) . "</p>";
-                    }
-                } else {
-                    // Si las contraseñas no coinciden, mostrar un mensaje de error
-                    echo "<p class='error'>Las contraseñas no coinciden. Por favor, inténtalo de nuevo.</p>";
-                }
+                echo "<p class='error'>Error al registrar el usuario: " . mysqli_error($conn) . "</p>";
             }
-
-            // Cerrar la conexión
-            mysqli_close($conn);
+        } else {
+            echo "<p class='error'>Las contraseñas no coinciden.</p>";
         }
-        ?><br><br><br>
+    }
+
+    mysqli_close($conn);
+}
+?>
+
     </div>
 </body>
 </html>

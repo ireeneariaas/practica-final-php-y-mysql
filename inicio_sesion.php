@@ -95,9 +95,8 @@
 
     <div class="message" id="message"></div>
     <?php
-session_start(); // Iniciar la sesión
+session_start(); // Iniciar sesión
 
-// Conexión a la base de datos
 $servername = "localhost";
 $username = "root";
 $password = "rootroot";
@@ -109,37 +108,24 @@ if (!$conn) {
     die("Conexión fallida: " . mysqli_connect_error());
 }
 
-$error_message = "";
-
-// Procesar el formulario de inicio de sesión
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['usuario']) && isset($_POST['contraseña'])) {
     $nombre_usuario = mysqli_real_escape_string($conn, $_POST['usuario']);
-    $contraseña = mysqli_real_escape_string($conn, $_POST['contraseña']);
+    $contraseña = $_POST['contraseña'];
 
-    // Consulta para verificar las credenciales
+    // Consulta para obtener la contraseña cifrada
     $sql = "SELECT id_usuario, nombre, tipo, saldo, password FROM usuarios WHERE nombre_usuario = '$nombre_usuario'";
     $result = mysqli_query($conn, $sql);
 
-    if (mysqli_num_rows($result) > 0) {
+    if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
 
-        // Verificar la contraseña usando password_verify
+        // **Verificar la contraseña con password_verify**
         if (password_verify($contraseña, $row['password'])) {
-            // Crear la sesión
             $_SESSION['id_usuario'] = $row['id_usuario'];
             $_SESSION['nombre_usuario'] = $nombre_usuario;
             $_SESSION['nombre'] = $row['nombre'];
             $_SESSION['tipo'] = $row['tipo'];
             $_SESSION['saldo'] = $row['saldo'];
-
-            // Insertar el inicio de sesión en la tabla registros_clientes
-            $id_usuario = $row['id_usuario'];
-            $saldo = (int)$row['saldo'];
-            $fecha_hora = date('Y-m-d H:i:s');
-
-            $insert_sql = "INSERT INTO registros_clientes (usuario, contraseña, fecha_hora, id_usuario, saldo) 
-                           VALUES ('$nombre_usuario', '$contraseña', '$fecha_hora', '$id_usuario', $saldo)";
-            mysqli_query($conn, $insert_sql);
 
             // Redirigir según el tipo de usuario
             if ($row['tipo'] == 'Vendedor') {
@@ -153,19 +139,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['usuario']) && isset($_
                 exit();
             }
         } else {
-            // Contraseña incorrecta
-            $error_message = "Usuario o contraseña incorrectos";
+            echo "<p class='error'>Usuario o contraseña incorrectos</p>";
         }
     } else {
-        // Usuario no encontrado
-        $error_message = "Usuario o contraseña incorrectos";
+        echo "<p class='error'>Usuario o contraseña incorrectos</p>";
     }
 
     mysqli_free_result($result);
 }
 
+
+
 mysqli_close($conn);
 ?>
+
 
 
 </body>
