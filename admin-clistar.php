@@ -180,7 +180,7 @@
                 echo "<td>" . $row["marca"] . "</td>"; // Mostrar Marca
                 echo "<td>" . $row["color"] . "</td>"; // Mostrar Color
                 echo "<td>" . $row["precio"] . "</td>"; // Mostrar Precio
-                echo "<td>" . ($row["alquilado"] ? "Sí" : "No") . "</td>"; // Mostrar si está alquilado
+                echo "<td>" . ($row["alquilado"] == "No alquilado" ? "No alquilado" : "Alquilado") . "</td>";
                 echo "</tr>";
             }
         } else {
